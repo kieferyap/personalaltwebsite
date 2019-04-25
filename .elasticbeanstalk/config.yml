@@ -1,0 +1,21 @@
+branch-defaults:
+  default:
+    environment: Paw-env
+  release/heroku-test:
+    environment: Paw-env
+environment-defaults:
+  Paw-env:
+    branch: null
+    repository: null
+global:
+  application_name: paw
+  default_ec2_keyname: paw-kiefer
+  default_platform: Python 3.6
+  default_region: ap-northeast-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  sc: null
+  workspace_type: Application

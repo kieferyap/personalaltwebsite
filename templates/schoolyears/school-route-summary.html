@@ -1,0 +1,101 @@
+{% load i18n %}
+{% load bootstrap3 %}
+{% bootstrap_icon "plus" as glyphicon_plus %}
+{% bootstrap_icon "export" as glyphicon_export %}
+
+<div class="row">
+	<div class="col-sm-6 page-header-left" id="route-info-summary">
+		{% trans "School Route Summary" %}
+	</div>
+	<div class="col-sm-6 page-header-right">
+		<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#route-code-generation">
+			{{ glyphicon_export }}
+			{% trans "Generate Code" %}
+		</button>
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-route" name="add-route-button">
+			{{ glyphicon_plus }}  {% trans "Add Route" %}
+		</button>
+	</div>
+</div>
+<div class="row padding-10">
+	<table id="school-routes" class="table table-hover padding-5">
+		<tr>
+			<th class="col-md-2">{% trans "Route Name" %}</th>
+			<th class="col-md-2 hidden-xs">{% trans "Source" %}</th>
+			<th class="col-md-2 hidden-xs">{% trans "Destination" %}</th>
+			<th class="col-md-2 hidden-xs">{% trans "Method" %}</th>
+			<th class="col-md-2 hidden-xs">{% trans "Round Trip" %}</th>
+			<th class="col-md-2">{% trans "Cost (¥)" %}</th>
+		</tr>
+		{% for route in school_routes %}
+		<tr>
+			<td>
+				<span class="editable-label" 
+					data-url="/schoolyears/update_route/route_name/" 
+					data-id="{{ route.id }}"
+					data-value="{{ route.route_name }}" 
+					data-type="textfield">
+					{{ route.route_name }}
+				</span>
+			</td>
+			<td class="hidden-xs">
+				<span class="editable-label" 
+					data-url="/schoolyears/update_route/source_name/" 
+					data-id="{{ route.id }}"
+					data-value="{{ route.source_name }}" 
+					data-type="textfield">
+					{{ route.source_name }}
+				</span>
+			</td>
+			<td class="hidden-xs">
+				<span class="editable-label" 
+					data-url="/schoolyears/update_route/destination_name/" 
+					data-id="{{ route.id }}"
+					data-value="{{ route.destination_name }}" 
+					data-type="textfield">
+					{{ route.destination_name }}
+				</span>
+			</td>
+			<td class="hidden-xs">
+				<span class="editable-label editable-dropdown" 
+					data-url="/schoolyears/update_route/travel_method/" 
+					data-id="{{ route.id }}"
+					data-value="{{ route.travel_method }}" 
+					data-type="dropdown"
+					data-dropdown-values="{{ json_travel_method_types }}">
+				</span>
+			</td>
+			<td class="hidden-xs">
+				<input type="checkbox" 
+					class="toggle-switch save-toggle-switch cost-toggle-switch" 
+					id="is-round-trip-{{ route.id }}" 
+					{% if route.is_round_trip %}
+					checked="true"
+					{% endif %}
+					data-on-text="Yes" 
+					data-off-text="No"  
+					data-on-color="success" 
+					data-size="small"
+					data-id="{{ route.id }}"
+					data-url="/schoolyears/update_route/is_round_trip/"/>
+			</td>
+			<td class="route-cost">
+				<span class="editable-label"
+					id="initial-total-cost-{{ route.id }}" 
+					data-url="/schoolyears/update_route/total_cost/" 
+					data-id="{{ route.id }}"
+					data-value="{{ route.total_cost }}" 
+					data-type="numeric-textfield">
+					{{ route.total_cost }}
+				</span>
+				<span class="display-block">
+					Total: 
+					<span id="calculated-total-cost-{{ route.id }}">
+						{{ route.calculated_total_cost }}
+					</span>
+				</span>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>

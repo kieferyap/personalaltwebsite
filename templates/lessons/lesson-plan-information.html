@@ -1,0 +1,109 @@
+{% load i18n %}
+{% load bootstrap3 %}
+{% bootstrap_icon "edit" as glyphicon_edit %}
+{% bootstrap_icon "chevron-right" as glyphicon_chevron_right %}
+{% bootstrap_icon "info-sign" as glyphicon_info_sign %}
+
+<div class="hidden remove-me lesson-plan-form">
+	<modal-content id="edit-lesson-plan-{{ hour.id }}">
+		<modal-head>
+			{% if selected_lesson and selected_course %}
+				{{ selected_course.course_name }}, {% trans "Lesson " %}{{ selected_lesson.lesson_number }}: Edit Hour <span class="edit-hour-number">{{ hour.hour_number }}</span>
+			{% else %}
+				{% trans "Edit Lesson Plan" %}
+			{% endif %}
+		</modal-head>
+
+		<form class="modal-form" action="/lessons/edit_lesson_plan" method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="lesson_plan_id" value="{{ hour.id }}"/>
+			{% bootstrap_field hour.edit_hour_form.greeting %}
+			{% bootstrap_field hour.edit_hour_form.warmup %}
+			{% bootstrap_field hour.edit_hour_form.presentation %}
+			{% bootstrap_field hour.edit_hour_form.practice %}
+			{% bootstrap_field hour.edit_hour_form.production %}
+			{% bootstrap_field hour.edit_hour_form.cooldown %}
+			{% bootstrap_field hour.edit_hour_form.assessment %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+</div>
+
+<div class="row">
+	<div class="col-sm-8 page-subheader-left">
+		{% if selected_topic or selected_lesson and selected_course %}
+			{% trans "Hour" %} <span class="hour-number">{{ hour.hour_number }}</span>{% trans "<span class='japanese-hour'></span>" %}
+		{% else %}
+			{% trans "Lesson Plan Information" %}
+		{% endif %}
+	</div>
+	<div class="col-sm-4 page-subheader-right">
+		<a href="/lessons/print_lesson_plan/{{ hour.id }}">
+			<button type="button" class="btn btn-tertiary print-lesson-plan">
+			{% bootstrap_icon "print" %} {% trans "Print" %}
+			</button>
+		</a>
+		<button type="button" 
+			class="btn btn-secondary btn-primary-view-section-period edit-lesson-plan"
+			id="edit-lesson-plan-button"
+			data-toggle="modal" 
+			data-target="#edit-lesson-plan-{{ hour.id }}">
+			{{ glyphicon_edit }} {% trans "Edit Lesson Plan" %}
+		</button>
+	</div>
+</div>
+<table class="table table-hover margin-top-5">
+	<tr>
+		<th class="col-xs-2">{% trans "Portion" %}</th>
+		<th>{% trans "Activity Name" %}</th>
+		<th class="col-xs-4">{% trans "Materials" %}</th>
+	</tr>
+	<tr>
+		<th>{% trans "Greeting" %}</th>
+		{% with hour.greeting as portion %}
+			{% include "lessons/lesson_plan_portion_cell.html" %}
+		{% endwith %}
+	</tr>
+	<tr>
+		<th>{% trans "Warmup" %}</th>
+		{% with hour.warmup as portion %}
+			{% include "lessons/lesson_plan_portion_cell.html" %}
+		{% endwith %}
+	</tr>
+	<tr>
+		<th>{% trans "Presentation" %}</th>
+		{% with hour.presentation as portion %}
+			{% include "lessons/lesson_plan_portion_cell.html" %}
+		{% endwith %}
+	</tr>
+	<tr>
+		<th>{% trans "Practice" %}</th>
+		{% with hour.practice as portion %}
+			{% include "lessons/lesson_plan_portion_cell.html" %}
+		{% endwith %}
+	</tr>
+	<tr>
+		<th>{% trans "Production" %}</th>
+		{% with hour.production as portion %}
+			{% include "lessons/lesson_plan_portion_cell.html" %}
+		{% endwith %}
+	</tr>
+	<tr>
+		<th>{% trans "Cooldown" %}</th>
+		{% with hour.cooldown as portion %}
+			{% include "lessons/lesson_plan_portion_cell.html" %}
+		{% endwith %}
+	</tr>
+	<tr>
+		<th>{% trans "Assessment" %}</th>
+		{% with hour.assessment as portion %}
+			{% include "lessons/lesson_plan_portion_cell.html" %}
+		{% endwith %}
+	</tr>
+</table>
+<hr/>

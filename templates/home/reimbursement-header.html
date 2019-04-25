@@ -1,0 +1,23 @@
+{% load bootstrap3 %}
+{% load i18n %}
+{% bootstrap_icon "plus" as glyphicon_plus %}
+
+<div class="row">
+	<div class="page-header-left">{% trans "Reimbursement Items for " %}{{ selected_month_name }} {{ selected_year }}</div>
+	{% trans "<strong>Note</strong>: Any new reimbursement entries made here is <strong>not saved to the PAW database</strong> because it is assumed that <strong>all reimbursement records are added to The Hub afterwards</strong>; therefore, reimbursement records are saved there. This reimbursement feature within the PAW website is <strong>just a means to make entering reimbursements much faster.</strong>" %}
+</div>
+<br/>
+<div class="row reimbursement-header-row">
+	<div class="col-xs-6 page-subheader-left">
+		Total: ￥<span class="total-reimbursement-cost">0</span>
+	</div>
+	<div class="col-xs-6 page-subheader-right">
+		<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#add-reimbursement-entry" name="add-reimbursement-entry-button" id="add-reimbursement-entry-button">
+			{{ glyphicon_plus }} {% trans "Add Item" %}
+		</button>&nbsp;
+		<button type="button" class="btn btn-primary" id="reimbursement-code-generation-button" data-toggle="modal" data-target="#reimbursement-code-generation">
+			{% bootstrap_icon "export" %}
+			{% trans "Generate Code" %}
+		</button>
+	</div>
+</div>

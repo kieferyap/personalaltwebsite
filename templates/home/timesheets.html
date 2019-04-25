@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block title %}
+{% trans "Timesheets" %}
+{% endblock title %}
+
+{% block additional_js %}
+<script src="{% static "js/home/timesheet.js" %}"></script>
+{% endblock additional_js %}
+
+{% block content %}
+	<form action="/generate_timesheet_pdf/" method="POST">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-xs-12 page-header-left" id="school-year-name">
+				{% trans "Timesheet Generation" %}
+			</div>
+		</div>
+		<table class="table table-hover padding-5">
+			<tr>
+				<th class="col-sm-3">{% trans "School Year" %}</th>
+				<td> 
+					<select class="form-control" id="timesheet-school-year" name="school-year">
+						{% for item in all_school_years %}
+							<option value="{{ item.school_year.id }}" 
+								data-start-month="{{ item.school_year.start_date.month }}"
+								data-start-year="{{ item.school_year.start_date.year }}"
+								data-end-month="{{ item.school_year.end_date.month }}"
+								data-end-year="{{ item.school_year.end_date.year }}"
+								data-schools="{{ item.schools }}">
+								{{ item.school_year.name }}
+							</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th class="col-sm-3">{% trans "School" %}</th>
+				<td id="timesheet-school-dropdown-cell">
+					<select disabled="true" class="form-control">
+						<option>{% trans "Loading" %}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th class="col-sm-3">{% trans "Month (from)" %}</th>
+				<td id="timesheet-start-month-dropdown-cell"> 
+					<select disabled="true" class="form-control">
+						<option>{% trans "Loading" %}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th class="col-sm-3">{% trans "Month (to)" %}</th>
+				<td id="timesheet-end-month-dropdown-cell">
+					<select disabled="true" class="form-control">
+						<option>{% trans "Please select an option from Month (from)" %}</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		<div class="row">
+			<div class="col-xs-12 page-header-left" id="school-year-name">
+				{% trans "Timesheet Data" %}
+			</div>
+		</div>
+		<table class="table table-hover padding-5">
+			{% for key, item in user_info.items %}
+			<tr>
+				<th class="col-sm-3">{{ key }}</th>
+				<td>
+					<input type="hidden" name="{{ key }}" value="{{ item.value }}"/>
+					<span class="editable-label" 
+						data-url="/update_profile/{{ item.database_key }}/" 
+						data-id="{{ item.id }}"
+						data-value="{{ item.value }}" 
+						data-type="textfield">
+						{{ item.value }}
+					</span>
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<div class="row">
+			<div class="col-sm-3 col-sm-offset-5">
+				<button class="btn btn-primary btn-generate-pdf">
+					{% bootstrap_icon "file" %} {% trans "Generate PDF" %}
+				</button>
+			</div>
+		</div>
+	</form>
+{% endblock content %}

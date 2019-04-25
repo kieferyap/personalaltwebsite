@@ -1,0 +1,21 @@
+{% load i18n %}
+{% load bootstrap3 %}
+<div class="hidden remove-me">
+	<modal-content id="add-topic">
+		<modal-head>
+			{% trans "Add Topic" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'lessons:add_topic' %}"  method="POST">
+		<modal-body>
+			{% csrf_token %}
+			{% bootstrap_field add_topic_form.name addon_after=glyphicon_pencil placeholder="Animals" %}
+			{% bootstrap_field add_topic_form.notes addon_after=glyphicon_pencil placeholder="A generic lesson plan about animals." %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+</div>

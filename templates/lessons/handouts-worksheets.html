@@ -1,0 +1,166 @@
+{% load i18n %}
+{% load static %}
+{% load bootstrap3 %}
+<div class="row">
+	<div class="col-xs-5 page-subheader-left">
+		{% trans "Handouts and Worksheets" %}
+	</div>
+	<div class="col-xs-7 page-subheader-right">
+		{% if activity.existing_file_dropdown %}
+		<button 
+			type="button" 
+			class="btn btn-tertiary" 
+			data-toggle="modal" 
+			data-target="#add-existing-file" 
+			name="add-file">
+				{% bootstrap_icon "link" %} {% trans "Add Existing File" %}
+		</button>
+		{% endif %}
+		{% if activity.files %}
+		<a href="/lessons/download_all/{{ activity.id }}">
+			<button 
+				type="button" 
+				class="btn btn-secondary" 
+				data-toggle="modal" 
+				data-target="#download-all" 
+				name="add-file">
+					{% bootstrap_icon "download" %} {% trans "Download All" %}
+			</button>
+		</a>
+		{% endif %}
+		
+		<button 
+			type="button" 
+			class="btn btn-primary" 
+			data-toggle="modal" 
+			data-target="#add-new-file" 
+			name="add-file">
+				{{ glyphicon_plus }} {% trans "Add New File" %}
+		</button>
+	</div>
+</div>
+<table class="table table-hover margin-top-5">
+	<tr>
+		<th class="col-xs-3">{% trans "Filename" %}</th>
+		<th class="col-xs-2">{% trans "Size" %}</th>
+		<th>{% trans "Notes" %}</th>
+		<th class="col-xs-5 page-subsubheader-right">{% trans "Actions" %}</th>
+	</tr>
+	{% if activity.files %}
+	{% for file in activity.files %}
+	<tr>
+		<td>
+			<div class="hidden remove-me">
+				<modal-content id="edit-file-{{ file.id }}">
+					<modal-head>
+						{% trans "Edit File Notes" %}
+					</modal-head>
+
+					<form class="modal-form" action="{% url 'lessons:edit_file' %}" method="POST">
+					<modal-body>
+						{% csrf_token %}
+						<input type="hidden" name="activity_file_id" value="{{ file.id }}"/>
+						{% bootstrap_field file.edit_form.notes placeholder="A bingo sheet for fruits" %}
+					</modal-body>
+
+					<modal-footer>
+						{% bootstrap_button "Save" button_type="submit" button_class="btn btn-primary" %}
+					</modal-footer>
+					</form>
+				</modal-content>
+			</div>
+			{{ file.original_filename }} 
+			{% if file.is_link_to_existing_file %}
+				<a href="#" data-toggle="tooltip" data-placement="right" title="{% trans 'This file is linked to another activity, so deleting this file would delete its presence in the other activity as well.' %}">{% bootstrap_icon "link" %}</a>
+			{% endif %}
+		</td>
+		<td>{{ file.activity_file.size|filesizeformat }}</td>
+		<td>
+			{% if file.notes %}
+				{{ file.notes }}
+			{% else %}
+				<i>N/A</i>
+			{% endif %}
+		</td>
+		<td class="page-subsubheader-right">
+			<a href="/lessons/delete_file/{{ file.id }}">
+				<button type="button" class="btn btn-tertiary">
+					{% bootstrap_icon "trash" %} {% trans "Delete" %}
+				</button>
+			</a>
+			<a href="{% static '' %}media/{{file.activity_file}}">
+				<button type="button" class="btn btn-secondary">
+					{% bootstrap_icon "download" %} {% trans "Download" %}
+				</button>
+			</a>
+			<button 
+				type="button" 
+				class="btn btn-primary" 
+				data-toggle="modal" 
+				data-target="#edit-file-{{ file.id }}">
+					{{ glyphicon_edit }} {% trans "Edit Notes" %}
+			</button>
+		</td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	<tr>
+		<td colspan="4" class="vertical-center">
+		{% trans "There are no files available for this activity. Would you like to " %}<a class="cursor-pointer" data-toggle="modal" data-target="#add-new-file">{% trans "add a new file" %}</a>?
+		</td>
+	</tr>
+	{% endif %}
+</table>
+
+<div class="hidden remove-me">
+	<modal-content id="add-new-file">
+		<modal-head>
+			{% trans "Add New File" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'lessons:add_file' %}" method="POST" enctype="multipart/form-data">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+			{% bootstrap_field activity.add_file_form.activity_file %}
+			{% bootstrap_field activity.add_file_form.notes placeholder="A bingo sheet for fruits" %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+	{% if activity.existing_file_dropdown %}
+	<modal-content id="add-existing-file">
+		<modal-head>
+			{% trans "Add A Previously Uploaded File" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'lessons:add_existing_file' %}" method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+
+			<div class="form-group">
+				<label class="control-label">Select File</label>
+				<select name="activity_file_id" required="" class="form-control">
+					{% for option in activity.existing_file_dropdown %}
+					<option value="{{ option.id }}">
+						{{ option.activity__activity_name }} — {{ option.original_filename }}
+					</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			{% bootstrap_field activity.add_file_form.notes placeholder="A bingo sheet for fruits" %}
+
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+	{% endif %}
+</div>

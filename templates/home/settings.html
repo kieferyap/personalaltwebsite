@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Settings" %}
+{% endblock title %}
+
+{% block content %}
+{% if user.is_superuser %}
+<div class="row">
+	<div class="col-xs-12 page-header-left" id="school-year-name">
+		{% trans "User Settings" %}
+	</div>
+</div>
+<table class="table table-hover padding-5">
+	<tr>
+		<th class="col-sm-3">{% trans "Employee Code" %}</th>
+		<td>
+			<span class="editable-label" 
+				data-url="/update_profile/employee_code/" 
+				data-id="{{ user_profile.id }}"
+				data-value="{{ user_profile.employee_code }}" 
+				data-type="textfield">
+				{{ user_profile.employee_code }}
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<th>{% trans "ALT Name" %}</th>
+		<td>
+			<span class="editable-label" 
+				data-url="/update_profile/alt_name/" 
+				data-id="{{ user_profile.id }}"
+				data-value="{{ user_profile.alt_name }}" 
+				data-type="textfield">
+				{{ user_profile.alt_name }}
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<th>{% trans "Board of Education" %}</th>
+		<td>
+			<span class="editable-label" 
+				data-url="/update_profile/board_of_education/" 
+				data-id="{{ user_profile.id }}"
+				data-value="{{ user_profile.board_of_education }}" 
+				data-type="textfield">
+				{{ user_profile.board_of_education }}
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<th>{% trans "Sales Person" %}</th>
+		<td>
+			<span class="editable-label" 
+				data-url="/update_profile/sales_person/" 
+				data-id="{{ user_profile.id }}"
+				data-value="{{ user_profile.sales_person }}" 
+				data-type="textfield">
+				{{ user_profile.sales_person }}
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<th>{% trans "FAX" %}</th>
+		<td>
+			<span class="editable-label" 
+				data-url="/update_profile/fax/" 
+				data-id="{{ user_profile.id }}"
+				data-value="{{ user_profile.fax }}" 
+				data-type="textfield">
+				{{ user_profile.fax }}
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<th>{% trans "Telephone" %}</th>
+		<td>
+			<span class="editable-label" 
+				data-url="/update_profile/telephone/" 
+				data-id="{{ user_profile.id }}"
+				data-value="{{ user_profile.telephone }}" 
+				data-type="textfield">
+				{{ user_profile.telephone }}
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<th>{% trans "Interac E-mail" %}</th>
+		<td>
+			<span class="editable-label" 
+				data-url="/update_profile/interac_email/" 
+				data-id="{{ user_profile.id }}"
+				data-value="{{ user_profile.interac_email }}" 
+				data-type="textfield">
+				{{ user_profile.interac_email }}
+			</span>
+		</td>
+	</tr>
+</table>
+{% endif %}
+<div class="row">
+	<div class="col-xs-12 page-header-left" id="school-year-name">
+		{% trans "Password Management" %}
+	</div>
+</div>
+<form action="/change_password" method="POST">
+{% csrf_token %}
+<table class="table table-hover padding-5">
+	<tr>
+		<th class="col-sm-3"><label for="id_old_password">{% trans "Old Password" %}</label></th>
+		<td><input type="password" name="old_password" id="id_old_password" class="form-control"/></td>
+	</tr>
+	<tr>
+		<th><label for="id_new_password1">{% trans "New Password" %}</label></th>
+		<td><input type="password" name="new_password1" id="id_new_password1" class="form-control"/></td>
+	</tr>
+	<tr>
+		<th><label for="id_new_password2">{% trans "New Password confirmation" %}</label></th>
+		<td><input type="password" name="new_password2" id="id_new_password2" class="form-control"/></td>
+	</tr>
+	<tr>
+		<th><label for="id_new_password2">{% trans "Password Notes" %}</label></th>
+		<td>
+			<span class="helptext"><ul>
+				<li>Your password can't be too similar to your other personal information.</li>
+				<li>Your password must contain at least 8 characters.</li>
+				<li>Your password can't be a commonly used password.</li>
+				<li>Your password can't be entirely numeric.</li>
+			</ul></span>
+		</td>
+	</tr>
+</table>
+<div class="row">
+	<div class="col-sm-3 col-sm-offset-5">
+		<button class="btn btn-primary" type="submit">
+			{% trans "Change Password" %}
+		</button>
+	</div>
+</div>
+</form>
+{% endblock content %}

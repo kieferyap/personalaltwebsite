@@ -1,0 +1,101 @@
+{% load i18n %}
+{% load bootstrap3 %}
+{% bootstrap_icon "plus" as glyphicon_plus %}
+{% bootstrap_icon "chevron-right" as glyphicon_chevron_right %}
+
+<div class="row">
+	<div class="col-sm-9 page-subsubheader-left">
+		{% trans "Book Activities" %}
+	</div>
+	<div class="col-sm-3 page-subsubheader-right">
+		<button 
+			type="button" 
+			class="btn btn-primary" 
+			data-toggle="modal" 
+			data-target="#add-book-activity-{{ lesson.id }}" 
+			name="add-book-activity">
+				{{ glyphicon_plus }} {% trans "Add Book Activity" %}
+		</button>
+	</div>
+</div>
+
+{% if lesson.book_activities %}
+	{% with lesson.book_activities as activities %}
+	{% include "lessons/view-activity-table.html" %}
+	{% endwith %}
+{% else %}
+<div class="row">
+	<div class="col-sm-12 center-align">
+		{% trans 'There are no activities available from the book for this lesson. <br/> Would you like to' %} <a class="cursor-pointer" data-toggle="modal" data-target="#add-book-activity-{{ lesson.id }}">{% trans 'add a new activity?' %}</a>
+	</div>
+</div>
+{% endif %}
+<br/>
+<div class="row">
+	<div class="col-sm-9 page-subsubheader-left">
+		{% trans "Free Activities" %}
+	</div>
+	<div class="col-sm-3 page-subsubheader-right">
+		<button 
+			type="button" 
+			class="btn btn-primary" 
+			data-toggle="modal" 
+			data-target="#add-free-activity-{{ lesson.id }}" 
+			name="add-free-activity">
+				{{ glyphicon_plus }} {% trans "Add Free Activity" %}
+		</button>
+	</div>
+</div>
+
+{% if lesson.free_activities %}
+	{% with lesson.free_activities as activities %}
+	{% include "lessons/view-activity-table.html" %}
+	{% endwith %}
+{% else %}
+<div class="row">
+	<div class="col-sm-12 center-align">
+		{% trans 'There are no free activities available for this lesson. <br/> Would you like to' %} <a class="cursor-pointer" data-toggle="modal" data-target="#add-free-activity-{{ lesson.id }}"> {% trans 'add a new activity?' %} </a> 
+	</div>
+</div>
+{% endif %}
+
+<div class="hidden remove-me">
+	<modal-content id="add-book-activity-{{ lesson.id }}">
+		<modal-head>
+			{{ course.course_name }}, {% trans "Lesson" %} {{ lesson.lesson_number }}: {% trans "Add Book Activity" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'lessons:add_book_activity' %}"  method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="lesson_id" value="{{ lesson.id }}"/>
+			{% bootstrap_field lesson.book_activity_form.activity_name addon_after=glyphicon_pencil placeholder="Let's Listen 1, p.33" %}
+			{% bootstrap_field lesson.book_activity_form.description placeholder="Waiter: 'What would you like?'&#10;Sakura: 'I'd like a hamburger steak, rice, and salad.'&#10;Waiter: 'A hamburger steak, rice, and salad? Okay.'&#10;&#10;Answer: Hamburger Steak, Rice, Salad" %}
+			{% bootstrap_field lesson.book_activity_form.materials addon_after=glyphicon_pencil placeholder="Ohajiki marbles, a small plush doll" %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+	<modal-content id="add-free-activity-{{ lesson.id }}">
+		<modal-head>
+			{{ course.course_name }}, {% trans "Lesson" %} {{ lesson.lesson_number }}: {% trans "Add Free Activity" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'lessons:add_free_activity' %}"  method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="lesson_id" value="{{ lesson.id }}"/>
+			{% bootstrap_field lesson.free_activity_form.activity_name addon_after=glyphicon_pencil placeholder="Gesture Game" %}
+			{% bootstrap_field lesson.free_activity_form.description placeholder="1. Have the class form two lines.&#10;2. Have the first person from each line step forward.&#10;3. Show a card to the first person.&#10;4. The first person gestures.&#10;5. The second person guesses.&#10;6. When guessed correctly, the second person moves to the front.&#10;7. The first person moves to the back.&#10;8. The fastest line wins." %}
+			{% bootstrap_field lesson.free_activity_form.materials addon_after=glyphicon_pencil placeholder="Small flash cards, bandana" %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+</div>

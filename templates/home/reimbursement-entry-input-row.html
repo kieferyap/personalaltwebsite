@@ -1,0 +1,39 @@
+{% load i18n %}
+{% load bootstrap3 %}
+{% bootstrap_icon "plus" as glyphicon_plus %}
+<tr id="reimbursement-entry-input"
+	data-year="{{ selected_year }}"
+	data-month="{{ selected_month }}">
+	<td></td>
+	<td>
+		<input name="reimbursement_date" 
+			required="" 
+			id="add-reimbursement-date" 
+			class="form-control" 
+			placeholder="{{ selected_year }}-{{ selected_month }}-01" 
+			title="" 
+			type="text"
+			data-year="{{ selected_year }}"
+			data-month="{{ selected_month }}">
+	</td>
+	<td>
+		<select class="form-control" id="add-reimbursement-route">
+		{% for route in route_choices %}
+			<option value="{{ route.id }}"
+				data-day=""
+				data-route-id="{{ route.id }}"
+				data-destination="{{ route.route_name }}"
+				data-from="{{ route.source_name }}"
+				data-to="{{ route.destination_name }}"
+				data-method="{{ route.travel_method }}"
+				data-is-round-trip="{{ route.is_round_trip }}"
+				data-total-cost="{{ route.calculated_total_cost }}">
+				{{ route.route_name }}
+				</option>
+		{% endfor %}
+		</select>
+	</td>
+	<td>
+		<button class="btn btn-primary" id="add-new-route">{{ glyphicon_plus }} {% trans "Add" %}</button>
+	</td>
+</tr>

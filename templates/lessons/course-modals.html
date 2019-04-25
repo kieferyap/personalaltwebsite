@@ -1,0 +1,47 @@
+{% load bootstrap3 %}
+{% load i18n %}
+{% load static %}
+{% bootstrap_icon "pencil" as glyphicon_pencil %}
+<div class="hidden remove-me">
+	{% if add_lesson_form and course %}
+	<modal-content id="add-lesson">
+		<modal-head>
+			{% trans "Add Lesson" %} <span id="new-lesson-number"></span>
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'lessons:add_lesson' %}"  method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="course_id" value="{{ course.id }}"/>
+			<input type="hidden" name="lesson_number" id="new-lesson-number-input" value=""/>
+			{% bootstrap_field add_lesson_form.title addon_after=glyphicon_pencil placeholder="What would you like? (ランチメニューを作ろう)" %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+	{% endif %}
+	{% if edit_course_form %}
+	<modal-content id="edit-course">
+		<modal-head>
+			{% trans "Edit Book" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'lessons:edit_course' %}"  method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="text" class="hidden" name="id" value="{{ course.id }}"/>
+			{% bootstrap_field edit_course_form.course_name addon_after=glyphicon_pencil placeholder="Hi Friends 1" %}
+			{% bootstrap_field edit_course_form.course_code addon_after=glyphicon_pencil placeholder="HiFr1" %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+	{% endif %}
+
+</div>

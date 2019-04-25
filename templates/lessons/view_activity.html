@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load bootstrap3 %}
+
+{% block title %}
+{% trans "View Activity" %}
+{% endblock title %}
+
+{% block additional_css %}
+<link type="text/css" rel="stylesheet" href="{% static "css/lessons/view-activity.css" %}" media="screen"/>
+{% endblock additional_css %}
+
+{% block content %}
+{% include "lessons/add-course-modal.html" %}
+{% bootstrap_icon "edit" as glyphicon_edit %}
+{% bootstrap_icon "plus" as glyphicon_plus %}
+
+<div class="lesson-activity">
+	<div class="row">
+		<div class="col-xs-9 page-header-left">{% trans "View Activity" %}</div>
+		<div class="col-xs-3 page-header-right">
+			<button type="button" 
+				class="btn btn-primary" 
+				data-toggle="modal" 
+				data-target="#edit-activity-{{ activity.id }}">
+				{{ glyphicon_edit }} {% trans "Edit" %}
+			</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="row activity-row no-hover-color">
+				<div class="col-xs-12 page-subheader-left">
+					{{ activity.activity_name }}
+				</div>
+			</div>
+			<div class="row activity-row">
+				<div class="col-xs-1 activity-header">
+					{% trans "Description" %}
+				</div>
+				<div class="col-xs-11 activity-description">
+					{{ activity.description|linebreaks }}
+				</div>
+			</div>
+			{% if activity.is_generic_activity %}
+			<div class="row activity-row">
+				<div class="col-xs-1 activity-header">
+					{% trans "Portion" %}
+				</div>
+				<div class="col-xs-11 activity-description">
+					{{ activity.activity_portion_type }}
+				</div>
+			</div>
+			{% endif %}
+			<div class="row activity-row">
+				<div class="col-xs-1 activity-header">
+					{% trans "Materials" %}
+				</div>
+				<div class="col-xs-11 activity-description">
+					{% if activity.materials != ''%}
+						{{ activity.materials }}
+					{% else %}
+						<i>N/A</i>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	<br/>
+	{% include "lessons/handouts-worksheets.html" %}
+</div>
+<br/>
+<div class="hidden remove-me">
+	<modal-content id="edit-activity-{{ activity.id }}">
+		<modal-head>
+			{% trans "Edit Activity" %}
+		</modal-head>
+
+		<form class="modal-form" action="
+			{% if activity.is_generic_activity %}
+				/lessons/edit_generic_activity
+			{% else %}
+				/lessons/edit_activity
+			{% endif %}
+		"  method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+			{% bootstrap_field activity.edit_form.activity_name addon_after=glyphicon_pencil placeholder="Let's Listen 1, p.33" %}
+			{% bootstrap_field activity.edit_form.description placeholder="Waiter: 'What would you like?'&#13;Sakura: 'I'd like a hamburger steak, rice, and salad.'&#13;Waiter: 'A hamburger steak, rice, and salad? Okay.'&#13;&#13;Answer: Hamburger Steak, Rice, Salad" %}
+			{% if activity.is_generic_activity %}
+				{% bootstrap_field activity.edit_form.activity_portion_type %}
+			{% endif %}
+			{% bootstrap_field activity.edit_form.materials addon_after=glyphicon_pencil placeholder="Ohajiki marbles, a small plush doll" %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+</div>
+
+{% endblock content %}

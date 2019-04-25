@@ -1,0 +1,84 @@
+{% load bootstrap3 %}
+{% load i18n %}
+{% bootstrap_icon "plus" as glyphicon_plus %}
+{% bootstrap_icon "trash" as glyphicon_trash %}
+{% bootstrap_icon "edit" as glyphicon_edit %}
+
+{% if selected_topic %}
+<div class="hidden remove-me lesson-plan-form">
+	<modal-content id="edit-topic">
+		<modal-head>
+			{% trans "Edit Topic Form" %}
+		</modal-head>
+
+		<form class="modal-form" action="/lessons/edit_topic" method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="id" value="{{ selected_topic.id }}"/>
+			{% bootstrap_field edit_topic_form.name %}
+			{% bootstrap_field edit_topic_form.notes %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+</div>
+{% endif %}
+<div class="row">
+	<div class="col-sm-{{ page_header_left_col_count }} page-header-left" id="lesson-names">
+		{% trans "Lesson Plans for " %}{{ lesson_title }}{% trans "<span class='japanese-lesson-plans'></span>" %}
+	</div>
+	<div class="col-sm-{{ page_header_right_col_count }} page-header-right">
+		{% if selected_topic %}
+		<a href="/lessons/delete_topic/{{ selected_topic.id }}">
+			<button type="button" name="delete-topic" class="btn btn-tertiary">
+				{{ glyphicon_trash }} {% trans "Delete Topic" %}
+			</button>
+		</a>
+		<button type="button" 
+			class="btn btn-secondary" 
+			name="edit-topic"
+			data-toggle="modal" 
+			data-target="#edit-topic">
+			{{ glyphicon_edit }} {% trans "Edit Topic" %}
+		</button>
+		{% endif %}
+		<button type="button" 
+			class="btn btn-primary" 
+			name="add-lesson-plan"
+			data-toggle="modal" 
+			data-target="#add-lesson-plan">
+			{{ glyphicon_plus }} {% trans "Add Lesson Plan" %}
+		</button>
+	</div>
+</div>
+
+<div class="hidden remove-me lesson-plan-form">
+	<modal-content id="add-lesson-plan">
+		<modal-head>
+			{{ lesson_title }}: {% trans "Add Hour" %} <span id="new-hour-number"></span>{% trans "<span class='japanese-add-hour'></span>" %}
+		</modal-head>
+
+		<form class="modal-form" action="{{ add_lesson_plan_url }}" method="POST">
+		<modal-body>
+			{% csrf_token %}
+			<input type="hidden" name="lesson_id" value="{{ selected_lesson.id }}"/>
+			<input type="hidden" name="topic_id" value="{{ selected_topic.id }}"/>
+			<input type="hidden" name="hour_number" id="new-hour-number-input" value=""/>
+			{% bootstrap_field add_hour_form.greeting %}
+			{% bootstrap_field add_hour_form.warmup %}
+			{% bootstrap_field add_hour_form.presentation %}
+			{% bootstrap_field add_hour_form.practice %}
+			{% bootstrap_field add_hour_form.production %}
+			{% bootstrap_field add_hour_form.cooldown %}
+			{% bootstrap_field add_hour_form.assessment %}
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+</div>

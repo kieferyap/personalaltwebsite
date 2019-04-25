@@ -1,0 +1,17 @@
+{% load bootstrap3 %}
+{% load i18n %}
+{% bootstrap_icon "edit" as glyphicon_edit %}
+
+<div class="row">
+	<div class="col-sm-9 page-header-left" id="school-year-name">
+		{{ course.course_name }}
+		<span class="header-course-code">
+			({{ course.course_code }})
+		</span>
+	</div>
+	<div class="col-sm-3 page-header-right">
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit-course" name="edit-course">
+			{{ glyphicon_edit }} {% trans "Edit" %}
+		</button>
+	</div>
+</div>

@@ -1,0 +1,214 @@
+{% load bootstrap3 %}
+{% load i18n %}
+{% load static %}
+{% bootstrap_icon "pencil" as glyphicon_pencil %}
+{% bootstrap_icon "calendar" as glyphicon_calendar %}
+<div class="hidden remove-me">
+	<modal-content id="add-route">
+		<modal-head>
+			{% trans "Add Route" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'school_years:add_school_year_route' %}"  method="POST">
+		<modal-body>
+			<div class="alert alert-info">
+				<strong>Note:</strong> To add a route that is for going <strong>to or from schools</strong>, please exit this modal and click the <strong>Route Information</strong> button of your respected school.
+			</div>
+			<br/>
+			{% csrf_token %}
+			<input type="hidden" name="school_year_id" value="{{ selected_school_year.id }}"/>
+			{% bootstrap_field add_route_form.route_name addon_after=glyphicon_pencil placeholder="To ALT Meeting, April ~ July 2017" %}
+			{% bootstrap_field add_route_form.source_name addon_after=glyphicon_pencil placeholder="Hachioji Station" %}
+			{% bootstrap_field add_route_form.destination_name addon_after=glyphicon_pencil placeholder="Fuchinobe Station" %}
+			{% bootstrap_field add_route_form.travel_method %}
+			{% bootstrap_field add_route_form.total_cost addon_before="¥" placeholder="240" %}
+			<div class="form-group">
+				<label class="control-label" for="id_is_round_trip">
+					{% trans "Round trip/One Way" %}
+				</label><br/>
+				{{ add_route_form.is_round_trip }}
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="id_is_alt_meeting">
+					{% trans "Is this new route for going to/from an ALT meeting?" %}
+				</label><br/>
+				{{ add_route_form.is_alt_meeting }}
+			</div>
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+	<modal-content id="route-code-generation">
+		<modal-head>
+			{% trans "Route Code Generation" %}
+		</modal-head>
+		<modal-body>
+			 <div class="row">
+				<div class="col-xs-6 page-subheader-left font-weight-500" id="route-info-summary">
+					{% trans "Generated code" %}
+				</div>
+				<div class="col-xs-6 page-subheader-right font-weight-500">
+					<button class="btn btn-primary btn-copy" data-clipboard-target="#route-code-generated-script" data-after-click-text='{% trans "Copied!" %}'>
+						{%trans "Copy Code" %}
+					</button>
+				</div>
+			</div>
+			<pre id="route-code-generated-script"> 
+var all_items = [];
+
+{% for route in school_routes %}
+all_items.push({
+	'route_name': '{{ route.route_name }}',
+	'travel_method': '{{ route.travel_method }}',
+	'source_station': '{{ route.source_name }}',
+	'destination_station': '{{ route.destination_name }}',
+	'is_round_trip': {% if route.is_round_trip %}true{% else %}false{% endif %},
+	'total_cost': {{ route.total_cost }}
+	});
+{% endfor %}
+
+	// Loop through the page, adding appropriate values to the appropriate elements
+	var selector_route_name_base = 'input[name=destination_';
+	var selector_travel_method_base = 'select[name=methods_';
+	var selector_source_station_base = 'input[name=from_';
+	var selector_destination_station_base = 'input[name=to_';
+	var selector_is_round_trip_base = 'input[name=round-trip_';
+	var selector_total_cost_base = 'input[name=fee_';
+	for (var index=0; index&lt;all_items.length; index+=1) {
+	var selector_index = index+1;
+	var selector_route_name = selector_route_name_base+selector_index+']';
+	var selector_travel_method = selector_travel_method_base+selector_index+']';
+	var selector_source_station = selector_source_station_base+selector_index+']';
+	var selector_destination_station = selector_destination_station_base+selector_index+']';
+	var selector_is_round_trip = selector_is_round_trip_base+selector_index+']';
+	var selector_total_cost = selector_total_cost_base+selector_index+']';
+
+	var value_route_name = all_items[index].route_name;
+	var value_travel_method = all_items[index].travel_method;
+	var value_source_station = all_items[index].source_station;
+	var value_destination_station = all_items[index].destination_station;
+	var value_is_round_trip = all_items[index].is_round_trip;
+	var value_total_cost = all_items[index].total_cost;
+
+	$(selector_route_name).val(value_route_name);
+	$(selector_travel_method).val(value_travel_method);
+	$(selector_source_station).val(value_source_station);
+	$(selector_destination_station).val(value_destination_station);
+	$(selector_is_round_trip).attr('checked', value_is_round_trip);
+	$(selector_total_cost).val(value_total_cost);
+}
+			</pre>
+		<div class="font-weight-500 font-size-150">{% trans "Instructions" %}</div>
+		<div class="instruction-image-code-generation">
+			<img src='{% static "images/route-code-generation-tutorial.gif" %}'/>
+		</div>
+		<br/>
+		<ol>
+			<li>{% trans "Click \"copy\" to copy the generated code." %}</li>
+			<li>{% trans "Go to <a href='https://sites.google.com/a/interacmail.com/hub/'>The Hub</a> &gt; Monthly Expense Claim &gt; Transport Route Registration" %}</li>
+			<li>{% trans "Right click and choose \"Inspect\" (Chrome) or \"Inspect Element\" (Firefox)" %}</li>
+			<li>{% trans "Click the Console tab" %}</li>
+			<li>{% trans "Paste the generated code that was copied in the console." %}</li>
+			<li>{% trans "Hit enter, and your routes should be filled in the fields." %}</li>
+		</ol>
+		</modal-body>
+		<modal-footer>
+		</modal-footer>
+		</form>
+	</modal-content>
+
+	{% if edit_form %}
+	<modal-content id="edit-schoolyear">
+		<modal-head>
+			{% trans "Edit School Year: " %}{{ selected_school_year.name }}
+		</modal-head>
+
+		<!-- This thing is failing me for some reason url 'school_years:school_year_save' selected_school_year.id -->
+		<form class="modal-form" action="/schoolyears/school_year_save/{{ selected_school_year.id }}" method="POST">
+		<modal-body>
+			{% csrf_token %}
+			{% bootstrap_field edit_form.start_date addon_after=glyphicon_calendar placeholder="2017-04-15" %}
+			{% bootstrap_field edit_form.end_date addon_after=glyphicon_calendar placeholder="2017-03-31" %}     
+		</modal-body>
+
+		<modal-footer>
+		</modal-footer>
+		</form>
+	</modal-content>
+	{% endif %}
+
+	{% if add_school_form %}
+	<modal-content id="add-school">
+		<modal-head>
+			{% trans "Add New School" %}
+		</modal-head>
+
+		<form class="modal-form" action="/schoolyears/add_school/{{ selected_school_year.id }}" method="POST">
+		<modal-body>
+			{% csrf_token %}
+			{% bootstrap_field add_school_form.name addon_after=glyphicon_pencil placeholder="Tana Elementary School" %}
+			{% bootstrap_field add_school_form.name_kanji addon_after=glyphicon_pencil placeholder="田名小学校" %}
+			{% bootstrap_field add_school_form.school_type %}
+		</modal-body>
+
+		<modal-footer>
+		</modal-footer>
+		</form>
+	</modal-content>
+	{% endif %}
+
+	<modal-content id="edit-color">
+		<modal-head>
+			{% trans "Edit School Color" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'school_years:edit_color' %}"  method="POST">
+		<modal-body>
+			<div class="vertical-center">
+				{% csrf_token %}
+				<!-- Display all the colors here -->
+				<input type="hidden" name="id" id="color-id" value=""/>
+				<input type="hidden" name="value" id="color-value" value=""/>
+				{% if school_colors is not None %}
+					{% for key, color in school_colors.items %}
+						<div class="btn school-color modal-school-color color-form" 
+							data-color="{{ color }}"
+							data-key="{{ key }}">
+							<div class="color-checkmark">
+								<span class="glyphicon glyphicon-ok"></span>
+							</div>
+						</div>
+					{% endfor %}
+				{% else %}
+				   There are no available school colors.
+				{% endif %}
+			</div>
+		</modal-body>
+
+		<modal-footer>
+			
+		</modal-footer>
+		</form>
+	</modal-content>
+
+	<modal-content id="add-schoolyear">
+		<modal-head>
+			{% trans "Add New School Year" %}
+		</modal-head>
+
+		<form class="modal-form" action="{% url 'school_years:school_year_save' %}"  method="POST">
+		<modal-body>
+			{% csrf_token %}
+			{% bootstrap_field school_year_form.start_date addon_after=glyphicon_calendar placeholder="2017-04-15" %}
+			{% bootstrap_field school_year_form.end_date addon_after=glyphicon_calendar placeholder="2018-03-31" %}
+		</modal-body>
+
+		<modal-footer>
+		</modal-footer>
+		</form>
+	</modal-content>
+
+</div>

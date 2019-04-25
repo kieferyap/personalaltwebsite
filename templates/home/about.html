@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+{% trans "About" %}
+{% endblock title %}
+
+{% block additional_css %}
+<link type="text/css" rel="stylesheet" href="/{% static 'css/home/about.css' %}" media="screen"/>
+{% endblock additional_css %}
+
+{% block additional_js %}
+<script src="/{% static 'js/home/about.js' %}"></script>
+{% endblock additional_js %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-xs-12 page-header-left">
+			{% trans "About" %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 page-subheader-left">
+			{% trans "System Specifications" %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<ul>
+				<li>Python v3.5.2</li>
+				<li>Django v1.11.20</li>
+				<li>Bootstrap v3.3.7</li>
+				<li>jQuery v3.2.1</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 page-subheader-left">
+			{% trans "Feature Summary and Overview" %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 vertical-center video-demo">
+			<br/>
+			{% trans '<iframe width="560" height="315" src="https://www.youtube.com/embed/KjuQhT3P6Rk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<br/>
+			<ul>
+				<li><h4>Teaching Material Management:</h4></li>
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+					<span class="about-image-container"
+						data-en="/{% static 'images/readme/flashcards.gif' %}"
+						data-ja="/{% static 'images/readme/flashcards-j.gif' %}"></span>
+					</div>
+				</div>
+				<ul>
+					<li>Allows users to store information about the books used, their respective flashcards, and the activities within them, into the system.</li>
+					<li>Allows users to enter their own custom activities.</li>
+					<li>Allows users <b>to digitally manage their lesson plans</b> using the activities that were stored into the database.</li>
+					<li><b>This keeps everything organized and in one place.</b></li>
+				</ul>
+				<br/>
+				<li><h4>Class Schedule Management:</h4></li>
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+					<span class="about-image-container"
+						data-en="/{% static 'images/readme/schedule.gif' %}"
+						data-ja="/{% static 'images/readme/schedule-j.gif' %}"></span>
+					</div>
+				</div>
+				<ul>
+					<li>Allows users to manage year levels, assigning books and storing notes about each section.</li>
+					<li>Users can store their day-to-day class schedule in the system, and assign lesson plans to them. This information is viewable in the dashboard and printable for use.</li>
+					<li>ALTs usually get their schedules from their schools in paper form, which results in the ALT having to maintain a ton of sheets. <b>Having it all stored digitally prevents loss of information due to schedule misplacement.</b></li>
+					<li>With different sections from different schools, ALTs would need to keep track of which class is in which lesson, and <b>having it all stored and organized digitally lifts the burden of remembering everything from the ALT.</b></li>
+				</ul>
+				<br/>
+				<li><h4>School Year Information Management:</h4></li>
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+					<span class="about-image-container"
+						data-en="/{% static 'images/readme/schoolyears.gif' %}"
+						data-ja="/{% static 'images/readme/schoolyears-j.gif' %}"></span>
+					</div>
+				</div>
+				<ul>
+					<li>Allows users to create a new school year by specifying its start and end dates</li>
+					<li>Allows users to store school information, digitally manage their yearly schedule, and save them all in the database.</li>
+					<li>Allows users to download a digital copy of their yearly schedule and add it to their calendars (e.g.: Google Calendar)</li>
+					<li><b>This prevents the issue of going to the incorrect school.</b></li>
+				</ul>
+				<br/>
+				<li><h4>Automated PDF Timesheet Generation:</h4></li>
+				<ul>
+					<li>By specifying the schools and the start and end months, users can auto-generate timesheets pre-filled with schedule information pulled from the database.</li>
+					<li>The generated PDF has asterisks denoting areas that need to be stamped. It also has an asterisk at the bottom of the page where the name of the person in charge needs to be written.</li>
+					<li>An automatically pre-filled timesheet with asterisks denoting required fields <b>lessens mistakes, and under normal circumstances, all the ALT has to do is to have it stamped.</b></li>
+				</ul>
+				<br/>
+				<li><h4>Reimbursement Management and Script Generation:</h4></li>
+				<ul>
+					<li>Allows users to easily manage and enter their reimbursement information in the official website.</li>
+					<li><b>This allows the user to enter their reimbursement information in seconds.</b></li>
+				</ul>				
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 page-subheader-left">
+			{% trans "Limitations" %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<ul>
+				<li>Currently, all users that are logged in will see the same information, because this is currently just a proof of concept and only me and my schools are using it so far, so the login is just for security, but I can make it so that individual users will only see their own information, if needed.</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 page-subheader-left">
+			{% trans "Developer Information and Message" %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<p>
+			I'm Kiefer, and I used to be a professional software engineer, dealing with web and mobile technologies before becoming an ALT. I've switched between front-end (client-side/UI/UX/etc.) and back-end (server-side/background logic/etc.) in various projects during my software engineering career. 
+			</p>
+			<p>
+			After becoming an ALT, I noticed that a lot of things would become way easier and much more convenient if there was a centralized system managing everything, and automating things that can be automated.
+			</p>
+			<p>
+			The system is currently tailored for my personal use, so if there are any specific modifications that are desired (e.g.: Schedulers can manage the schedule of the ALTs, ALTs can only view their schedule and only have access to certain parts of the site, etc.), please feel free to contact me.
+			</p>
+			<p>
+			Thank you for taking the time to read this. I hope that this system is helpful!
+			</p>
+		</div>
+	</div>
+{% endblock content %}

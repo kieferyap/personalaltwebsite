@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+{% trans "Check Reimbursements" %}
+{% endblock title %}
+
+{% block additional_css %}
+<link type="text/css" rel="stylesheet" href="{% static "css/home/check-reimbursements.css" %}" media="screen"/>
+{% endblock additional_css %}
+
+{% block additional_js %}
+<script src="{% static "js/home/check-reimbursements.js" %}"></script>
+{% endblock additional_js %}
+
+{% block content %}
+	{% include "home/reimbursement-header.html" %}
+	<table class="table table-hover padding-5" id="reimbursement-table">
+		<tr>
+			<th class="col-md-2">Include</th>
+			<th class="col-md-2">Date</th>
+			<th class="col-md-6">Route</th>
+			<th class="col-md-2">Cost (￥)</th>
+		</tr>
+		{% if all_routes %}
+			{% for item in all_routes %}
+				{% for route in item.routes %}
+					{% include "home/reimbursement-entry-row.html" %}
+				{% endfor %}
+			{% endfor %}
+			{% include "home/reimbursement-entry-input-row.html" %}
+		{% else %}
+			<tr>
+				<td colspan="4" id="no-reimbursement-information">
+					{% trans "There are no reimbursement information available for this month." %}
+				</td>
+			</tr>
+		{% endif %}
+	</table>
+	{% include "home/reimbursement-modal.html" %}
+{% endblock content %}

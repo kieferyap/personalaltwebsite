@@ -1,0 +1,29 @@
+<tr>
+	<td>
+		<input type="checkbox" 
+			class="toggle-switch include-switch"
+			checked="true"
+			data-on-text="Yes" 
+			data-off-text="No"  
+			data-on-color="success"/>
+	</td>
+	<td class="reimbursement-date">{{ item.date|date:"Y-m-d" }}</td>
+	<td class="route-info"
+		data-day="{{ item.date|date:'d' }}"
+		data-route-id="{{ route.id }}"
+		data-destination="{{ route.route_name }}"
+		data-from="{{ route.source_name }}"
+		data-to="{{ route.destination_name }}"
+		data-method="{{ route.travel_method }}"
+		data-is-round-trip="{{ route.is_round_trip }}"
+		data-total-cost="{{ route.calculated_total_cost }}">
+		{{ route.route_name }}</td>
+	<td>
+		<span class="individual-reimbursement-cost">
+			{{ route.calculated_total_cost }}
+		</span>
+		{% if route.is_round_trip %}
+			<span class="round-trip-marker">Round Trip</span>
+		{% endif %}
+	</td>
+</tr>

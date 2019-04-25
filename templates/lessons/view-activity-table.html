@@ -1,0 +1,65 @@
+{% load i18n %}
+{% load bootstrap3 %}
+{% bootstrap_icon "info-sign" as glyphicon_info_sign %}
+<table class="table table-hover padding-5 margin-top-5">
+<tr>
+	<th class="col-xs-3">{% trans "Name" %}</th>
+	<th class="col-xs-2">{% trans "Materials" %}</th>
+	<th class="col-xs-4 page-subsubheader-right">{% trans "Actions" %}</th>
+</tr>
+{% for activity in activities %}
+<tr>
+	<td>
+		{{ activity.activity_name }}
+		<div class="hidden remove-me">
+			<modal-content id="edit-activity-{{ activity.id }}">
+				<modal-head>
+					{% trans "Edit Activity" %}
+				</modal-head>
+
+				<form class="modal-form" action="
+					{% if activity.is_generic_activity %}
+						/lessons/edit_generic_activity
+					{% else %}
+						/lessons/edit_activity
+					{% endif %}"  method="POST">
+				<modal-body>
+					{% csrf_token %}
+					<input type="hidden" name="activity_id" value="{{ activity.id }}"/>
+					{% bootstrap_field activity.edit_form.activity_name addon_after=glyphicon_pencil placeholder="Let's Listen 1, p.33" %}
+					{% bootstrap_field activity.edit_form.description placeholder="Waiter: 'What would you like?'&#10;Sakura: 'I'd like a hamburger steak, rice, and salad.'&#10;Waiter: 'A hamburger steak, rice, and salad? Okay.'&#10;&#10;Answer: Hamburger Steak, Rice, Salad" %}
+					{% if activity.is_generic_activity %}
+						{% bootstrap_field activity.edit_form.activity_portion_type %}
+					{% endif %}
+					{% bootstrap_field activity.edit_form.materials addon_after=glyphicon_pencil placeholder="Ohajiki marbles, a small plush doll" %}
+				</modal-body>
+
+				<modal-footer>
+					
+				</modal-footer>
+				</form>
+			</modal-content>
+		</div>
+	</td>
+	<td>
+		{% if activity.materials %}
+			{{ activity.materials }}
+		{% else %}
+			<i>N/A</i>
+		{% endif %}
+	</td>
+	<td class="page-subsubheader-right">
+		<a href="/lessons/view_activity/{{ activity.id }}">
+			<button class="btn btn-secondary">
+				{% bootstrap_icon "plus" %} {% trans "Add Handouts" %}
+			</button>
+		</a>
+		<button class="btn btn-primary"
+			data-toggle="modal"
+			data-target="#edit-activity-{{ activity.id }}">
+			{% bootstrap_icon "edit" %} {% trans "Edit" %}
+		</button>
+	</td>
+</tr>
+{% endfor %}
+</table>

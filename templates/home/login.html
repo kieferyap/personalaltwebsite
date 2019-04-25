@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block title %}
+{% trans "Login" %}
+{% endblock title %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-xs-12 page-header-left">
+			{% trans "Login" %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			{% trans "Please login using with the credentials provided by the administrator." %}
+		</div>
+	</div>
+	<br/>
+	<form action="/login" method="POST">
+		{% csrf_token %}
+		{% bootstrap_field form.username %}
+		{% bootstrap_field form.password %}
+		<button class="btn btn-primary" type="submit">
+			{% bootstrap_icon "user" %} {% trans "Login" %}
+		</button>
+	</form>
+{% endblock content %}

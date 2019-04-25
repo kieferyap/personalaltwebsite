@@ -1,0 +1,118 @@
+{% load i18n %}
+{% load static %}
+
+<div class="hidden remove-me">
+	<modal-content id="reimbursement-code-generation">
+		<modal-head>
+			{% trans "Route Code Generation" %}
+		</modal-head>
+		<modal-body>
+			 <div class="row">
+				<div class="col-xs-6 page-subheader-left font-weight-500" id="reimbursement-info-summary">
+					{% trans "Generated code" %}
+				</div>
+				<div class="col-xs-6 page-subheader-right font-weight-500">
+					<button class="btn btn-primary btn-copy" data-clipboard-target="#reimbursement-code-generated-script" data-after-click-text='{% trans "Copied!" %}'>
+						{% trans "Copy Code" %}
+					</button>
+				</div>
+			</div>
+			<span class="hidden raw-code-variable">
+all_routes.push({
+	"dates": <span class="date-array"></span>,
+	"destination": <span class="destination"></span>,
+	"from": <span class="from"></span>,
+	"to": <span class="to"></span>,
+	"method": <span class="method"></span>,
+	"isRoundTrip": <span class="is-round-trip"></span>,
+	"fee": <span class="fee"></span>,
+});
+			</span>
+			<span class="hidden raw-code-constant">
+var interac_mail = "{{ interac_email }}"; 
+var all_routes = [];
+
+<span class="all-routes"></span>
+
+// Get the year and the month
+// I need the month number, not the month index, hence the +1.
+var year = '{{ selected_year }}';
+var month = '<span class="add-leading-zero">{{ selected_month }}</span>';
+var entry_id = 1; // Their entry index starts at 1, not 0.
+var sub_total = 0;
+
+var date_base_id = "#template_body_new_doc_date_";
+var price_base_id = "#template_body_new_doc_price_";
+var route_base_name_prefix = "select[name=route_";
+var methods_base_name_prefix = "select[name=methods_"
+var round_trip_base_name_prefix = "input[name=round-trip_"
+var destination_base_name_prefix = "input[name=destination_"
+var from_base_name_prefix = "input[name=from_"
+var to_base_name_prefix = "input[name=to_"
+var name_suffix = "]";
+
+for(var active_school_index=0; active_school_index &lt; all_routes.length; active_school_index+=1) {
+	for(var i=0; i &lt; all_routes[active_school_index].dates.length; i+=1, entry_id+=1) {
+		var date_selector = date_base_id+entry_id;
+		var price_selector = price_base_id+entry_id;
+		var route_selector = route_base_name_prefix+entry_id+name_suffix;
+		var destination_selector = destination_base_name_prefix+entry_id+name_suffix;
+		var methods_selector = methods_base_name_prefix+entry_id+name_suffix;
+		var from_selector = from_base_name_prefix+entry_id+name_suffix;
+		var to_selector = to_base_name_prefix+entry_id+name_suffix;
+		var round_trip_selector = round_trip_base_name_prefix+entry_id+name_suffix;
+
+		var cost_value = all_routes[active_school_index].fee;
+		var destination_value = all_routes[active_school_index].destination;
+		var method_value = all_routes[active_school_index].method;
+		var from_value = all_routes[active_school_index].from;
+		var to_value = all_routes[active_school_index].to;
+		var route_value = interac_mail+"_"+(active_school_index+1);
+		var is_round_trip_value = all_routes[active_school_index].isRoundTrip;
+		var date_value = year
+			+"-"+month
+			+"-"+all_routes[active_school_index].dates[i];
+
+		$(date_selector).val(date_value);
+		$(price_selector).val(cost_value);
+		$(route_selector).val(route_value);
+		$(destination_selector).val(destination_value);
+		$(methods_selector).val(method_value);
+		$(from_selector).val(from_value);
+		$(to_selector).val(to_value);
+		$(round_trip_selector).attr('checked', is_round_trip_value);
+
+		// Add the sub_total
+		sub_total += cost_value;
+	}
+}
+
+// Set the total value
+var sub_total_string = sub_total.toLocaleString("en");
+$("#template_body_new_doc_sub_total").val(sub_total_string);
+$("#template_body_new_doc_total_fee").val(sub_total_string);
+			</span>
+			<pre id="reimbursement-code-generated-script"> 
+
+			</pre>
+		<div class="font-weight-500 font-size-150">{% trans "Instructions" %}</div>
+		<div class="instruction-image-code-generation">
+			<img class="lazy-load" data-src="{% static "images/reimbursement-code-generation.gif" %}" src=""/>
+		</div>
+		<br/>
+		<ol>
+			<li>{% trans "Click \"copy\" to copy the generated code." %}</li>
+			<li>{% trans "Go to <a href='https://sites.google.com/a/interacmail.com/hub/'>The Hub</a> &gt; Monthly Expense Claim &gt; Monthly Expense Claim" %}</li>
+			<li>{% trans "Click the dropdown which has the words \"*Select Application Template\" and select \"01. Regular Transportation Claim Sheet\"." %}</li>
+			<li>{% trans "Click \"Create New\"." %}</li>
+			<li>{% trans "Right click the blue \"01. Regular Transportation Claim Sheet\" and choose \"Inspect\" (Chrome)" %}</li>
+			<li>{% trans "Click the Console tab" %}</li>
+			<li>{% trans "Paste the generated code that was copied in the console." %}</li>
+			<li>{% trans "Hit enter, and your reimbursement entries should all be filled in the fields." %}</li>
+		</ol>
+		</modal-body>
+		<modal-footer>
+		</modal-footer>
+		</form>
+	</modal-content>
+</div>

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+{% trans "Reimbursements" %}
+{% endblock title %}
+
+{% block additional_js %}
+<script src="{% static "js/home/reimbursements.js" %}"></script>
+{% endblock additional_js %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-xs-12 page-header-left" id="school-year-name">
+			{% trans "Reimbursement Period Selection" %}
+		</div>
+	</div>
+	<form action="{% url 'home:check_reimbursements' %}"  method="POST">
+	{% csrf_token %}
+	<table class="table table-hover padding-5">
+		<tr>
+			<th class="col-sm-3">{% trans "School Year" %}</th>
+			<td> 
+				<select class="form-control" id="reimbursement-school-year" name="school-year">
+					{% for item in all_school_years %}
+						<option value="{{ item.id }}" 
+							data-start-month="{{ item.start_date.month }}"
+							data-start-year="{{ item.start_date.year }}"
+							data-end-month="{{ item.end_date.month }}"
+							data-end-year="{{ item.end_date.year }}">
+							{{ item.name }}
+						</option>
+					{% endfor %}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th class="col-sm-3">{% trans "Month" %}</th>
+			<td id="reimbursement-month-dropdown-cell"> 
+				<select disabled="true" class="form-control" name="month">
+					<option>{% trans "Loading" %}</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<div class="row">
+		<div class="col-sm-3 col-sm-offset-5">
+			<button class="btn btn-primary btn-view-reimbursements">
+				{% bootstrap_icon "info-sign" %} {% trans "View Reimbursements" %}
+			</button>
+		</div>
+	</div>
+	</form>
+{% endblock content %}
