@@ -7,6 +7,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+import django_heroku
 import os, sys
 from django.utils.translation import ugettext_lazy as _
 from decouple import config
@@ -178,3 +179,4 @@ STATICFILES_DIRS = (os.path.join('static'),)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_FILE_STORAGE = 'paw.storage_backends.MediaStorage'
+django_heroku.settings(locals())
