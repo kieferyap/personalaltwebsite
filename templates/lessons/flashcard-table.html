@@ -30,9 +30,7 @@
 					<modal-body>
 						{% csrf_token %}
 						<div class="row">
-							<div class="col-xs-12 vertical-center">
-								{% static "css/" %}[]<br/>
-								{{ flashcard_lesson.flashcard.picture }}
+							<div class="col-xs-12 vertical-center flashcard-image-wrapper" data-image="{% static 'media' %}/{{ flashcard_lesson.flashcard.picture }}">
 								No preview image.
 							</div>
 						</div>
