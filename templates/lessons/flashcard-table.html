@@ -28,6 +28,7 @@
 
 					<form class="modal-form" action="{% url 'lessons:edit_flashcard' %}" method="POST">
 					<modal-body>
+						{% csrf_token %}
 						<input type="hidden" name="flashcard_id" value="{{ flashcard_lesson.flashcard.id }}" />
 						{% bootstrap_field flashcard_lesson.flashcard.edit_flashcard_form.label addon_after=glyphicon_pencil placeholder="Baskbetball" %}
 						{% bootstrap_field flashcard_lesson.flashcard.edit_flashcard_form.notes addon_after=glyphicon_pencil placeholder="Sports" %}
