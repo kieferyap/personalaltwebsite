@@ -21,7 +21,21 @@
 				<span class="small text-muted">({{ flashcard_lesson.lesson }})</span>
 			{% endif %}
 			<div class="hidden remove-me">
+				<modal-content id="edit-flashcard-{{ flashcard_lesson.flashcard.id }}">
+					<modal-head>
+						{% trans "Edit Flashcard" %}
+					</modal-head>
 
+					<form class="modal-form" action="{% url 'lessons:edit_flashcard' %}" method="POST">
+					<modal-body>
+						
+					</modal-body>
+
+					<modal-footer>
+						
+					</modal-footer>
+					</form>
+				</modal-content>
 			</div>
 		</td>
 		<td class="hidden-xs">
