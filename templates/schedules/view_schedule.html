@@ -149,15 +149,62 @@
 				</modal-footer>
 				</form>
 			</modal-content>
+			<modal-content id="add-all-classes-{{ schedule.periods.section_period_type.id }}">
+				<modal-head>
+					{% trans "Add All Classes for" %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}
+				</modal-head>
+
+				<form class="modal-form" action="/schedules/edit_schedule_period_profile"  method="POST">
+				<modal-body>
+					{% csrf_token %}
+					<!--input type="hidden" name="id" value="{{ schedule.periods.section_period_type.id }}"/>
+					{% bootstrap_field schedule.periods.section_period_type.edit_form.school_period_type %}-->
+					<div class="form-group">
+						<label class="control-label" for="id_school_period_type">
+							{% trans "Class Schedule" %}
+						</label>
+					</div>
+					<table class="table table-hover padding-5 margin-top-5">
+					<tr>
+						<th class="col-xs-4">{% trans "Time Period" %}</th>
+						<th class="col-xs-8">{% trans "Section" %}</th>	
+					</tr>
+					{% for period in schedule.periods.school_periods %}
+					<tr>
+						<td>
+							<strong>{{ period.period_number }}</strong> 
+						</td>
+						<td>
+							// Form which has all classes
+						</td>
+					</tr>
+					{% endfor %}
+					</table>
+					// Form that has all the lesson plans
+				</modal-body>
+
+				<modal-footer>
+					
+				</modal-footer>
+				</form>
+			</modal-content>
 		</div>
 		<div class="row">
-			<div class="col-sm-9 page-subheader-left">
+			<div class="col-sm-6 page-subheader-left">
 				{{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}
 				<span class="default-profile-marker set-data-color" data-color="#{{ schedule.periods.school_period_type.get_period_type_color }}">
 					{{ schedule.periods.school_period_type.period_name }}
 				</span>
 			</div>
-			<div class="col-sm-3 page-subheader-right">
+			<div class="col-sm-6 page-subheader-right">
+				<button 
+					type="button" 
+					class="btn btn-secondary"
+					data-toggle="modal" 
+					data-target="#add-all-classes-{{ schedule.periods.section_period_type.id }}" 
+					name="add-all-classes-button">
+						{{ glyphicon_plus }} {% trans "Add All Classes" %}
+				</button>
 				<button 
 					type="button" 
 					class="btn btn-primary"
