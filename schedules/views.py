@@ -96,6 +96,69 @@ def delete_class(request, section_period_id):
     return JsonResponse({'is_success': True, 'messages': None})
 
 @require_POST
+def add_all_classes(request):
+    lesson_plan_id = get_value_of_optional_field_in_post_or_none(request, 'lesson-plan-id')
+    lesson_plan_raw = None if lesson_plan_id is None or int(lesson_plan_id) == 0 else get_object_or_404(LessonPlan, pk=int(lesson_plan_id))
+
+    date = dt.strptime(request.POST['date'], "%Y-%m-%d")
+    period_count = int(request.POST['period-count'])
+    period_section = []
+
+    lesson_number = 1
+    hour_number = 1
+
+    for i in range(1, period_count+1):
+        section_id = int(request.POST['section-'+str(i)])
+        if section_id != 0:
+            section = get_object_or_404(Section, pk=section_id)
+
+            school_period_id = request.POST['period-'+str(i)]
+            school_period = get_object_or_404(SchoolPeriod, pk=int(school_period_id))
+
+            if lesson_plan_raw is None:
+                lesson_plan = LessonPlan(
+                    lesson=None,
+                    hour_number=None,
+                    greeting=None,
+                    warmup=None,
+                    presentation=None,
+                    practice=None,
+                    production=None,
+                    cooldown=None,
+                    assessment=None,
+                    is_premade_lesson_plan=False,
+                )
+                lesson_plan.save()
+                last_period = SectionPeriod.objects.filter(section=section)
+                if last_period.exists():
+                    last_period = last_period.latest('date')
+                    lesson_number = last_period.lesson_number
+                    hour_number = last_period.hour_number+1
+            else:
+                lesson_plan = lesson_plan_raw
+                lesson_number = 1
+                if lesson_plan.lesson is not None:
+                    lesson_number = lesson_plan.lesson.lesson_number
+                hour_number = lesson_plan.hour_number
+                lesson_plan.pk = None
+                lesson_plan.is_premade_lesson_plan = False
+                lesson_plan.save()
+
+            new_section_period = SectionPeriod(
+                date=date,
+                section=section,
+                school_period=school_period,
+                lesson_plan=lesson_plan,
+                lesson_number=lesson_number,
+                hour_number=hour_number,
+                notes='',
+            )
+            new_section_period.save()
+
+    messages.success(request, MSG_ADD_CLASS)
+    return JsonResponse({'is_success': True, 'messages': None})
+
+@require_POST
 def add_class(request):
     lesson_plan_id = get_value_of_optional_field_in_post_or_none(request, 'lesson_plan')
     section_id = get_value_of_optional_field_in_post_or_none(request, 'section')

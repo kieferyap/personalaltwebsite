@@ -57,13 +57,17 @@ class SchoolPeriodTypeManager(models.Manager):
         class_info = self.__get_class_info(school, date)
 
         # For each school period, check if there is any class/lesson plan for it
+        is_day_empty = True
         for period in class_info['school_periods']:
             period.class_info = section_period_model.objects.get_class_period(period, date)
+            if is_day_empty and period.class_info is not None:
+                is_day_empty = False
 
         return {
             'school_period_type': class_info['school_period_type'], 
             'school_periods': class_info['school_periods'],
             'section_period_type': class_info['section_period_type'],
+            'is_day_empty': is_day_empty
         }    
     
     def get_section_period_type_form(self, instance, school):
