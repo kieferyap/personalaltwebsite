@@ -149,6 +149,7 @@
 				</modal-footer>
 				</form>
 			</modal-content>
+			{% if schedule.periods.is_day_empty %}
 			<modal-content id="add-all-classes-{{ schedule.periods.section_period_type.id }}">
 				<modal-head>
 					{% trans "Add All Classes, Same Lesson Plan for" %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}
@@ -217,6 +218,7 @@
 				</modal-footer>
 				</form>
 			</modal-content>
+			{% endif %}
 		</div>
 		<div class="row">
 			<div class="col-sm-6 page-subheader-left">
