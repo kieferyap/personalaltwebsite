@@ -149,15 +149,93 @@
 				</modal-footer>
 				</form>
 			</modal-content>
+			<modal-content id="add-all-classes-{{ schedule.periods.section_period_type.id }}">
+				<modal-head>
+					{% trans "Add All Classes, Same Lesson Plan for" %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}
+				</modal-head>
+
+				<form class="modal-form" action="/schedules/add_all_classes"  method="POST">
+				<modal-body>
+					{% csrf_token %}
+					<input type="hidden" name="id" value="{{ schedule.periods.section_period_type.id }}"/>
+					<input type="hidden" name="period-count" value="{{ schedule.periods.school_periods.count }}"/>
+					<input type="hidden" name="date" value='{{ schedule.date|date:"Y-m-d" }}'/>
+
+					<div class="form-group">
+						<label class="control-label" for="id_school_period_type">
+							{% trans "Class Schedule" %}
+						</label>
+					</div>
+					<table class="table table-hover padding-5 margin-top-5">
+					<tr>
+						<th class="col-xs-3">{% trans "Time Period" %}</th>
+						<th class="col-xs-9">{% trans "Section" %}</th>	
+					</tr>
+					{% for period in schedule.periods.school_periods %}
+					<tr>
+						<td>
+							<strong>
+								{{ period.period_number }}
+								<input type="hidden" name="period-{{ period.period_number }}" value="{{ period.id }}"/>
+							</strong> 
+						</td>
+						<td>
+							<select name="section-{{ period.period_number }}" 
+								required="" 
+								class="form-control"
+								title="">
+								<option value="0">N/A</option>
+								{% for section in all_sections %}
+								<option value="{{ section.id }}">
+									{% if section.school_section__is_special_needs %}{% trans "Special Needs" %}{% else %}{{ section.school_section__year_level }}{% endif %}-{{ section.section_name }} 
+								</option>
+								{% endfor %}
+							</select>
+						</td>
+					</tr>
+					{% endfor %}
+					</table>
+					<div class="form-group">
+						<label class="control-label" for="id_school_period_type">
+							{% trans "Lesson Plan" %}
+						</label>
+						<select class="form-control"
+							name="lesson-plan-id"
+							required="">
+							<option value="0">N/A</option>
+							{% for lesson_plan in all_lesson_plans %}
+							<option value="{{ lesson_plan.id }}">
+								{{ lesson_plan }}
+							</option>
+							{% endfor %}
+						</select>
+					</div>
+				</modal-body>
+
+				<modal-footer>
+					
+				</modal-footer>
+				</form>
+			</modal-content>
 		</div>
 		<div class="row">
-			<div class="col-sm-9 page-subheader-left">
+			<div class="col-sm-6 page-subheader-left">
 				{{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}
 				<span class="default-profile-marker set-data-color" data-color="#{{ schedule.periods.school_period_type.get_period_type_color }}">
 					{{ schedule.periods.school_period_type.period_name }}
 				</span>
 			</div>
-			<div class="col-sm-3 page-subheader-right">
+			<div class="col-sm-6 page-subheader-right">
+				{% if schedule.periods.is_day_empty %}
+				<button 
+					type="button" 
+					class="btn btn-secondary"
+					data-toggle="modal" 
+					data-target="#add-all-classes-{{ schedule.periods.section_period_type.id }}" 
+					name="add-all-classes-button">
+						{{ glyphicon_plus }} {% trans "Add All Classes" %}
+				</button>
+				{% endif %}
 				<button 
 					type="button" 
 					class="btn btn-primary"
