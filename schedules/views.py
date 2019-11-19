@@ -13,6 +13,7 @@ from paw.methods import render_page, school_year_required, get_value_of_optional
 from schedules.forms import *
 from schedules.models import *
 from schedules.constants import *
+from schedules.managers import SchoolSectionManager
 from schoolyears.models import SchoolYear, School, YearlySchedule
 
 
@@ -75,6 +76,8 @@ def view_schedule(request, school_year_id=None, school_id=None, year=None, month
         context['all_schedules'] = all_schedules
         context['school'] = school
         context['current_date'] = dt.strptime("%s-%s-01"%(year, month), "%Y-%m-%d")
+        context['all_sections'] = SchoolSectionManager().get_sections(school)
+        context['all_lesson_plans'] = LessonPlan.objects.filter(is_premade_lesson_plan=True).all()
 
         return schedule_render_page(request,
                            page=VIEW_SCHEDULE,

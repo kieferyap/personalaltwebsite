@@ -189,7 +189,7 @@ class LessonPlan(models.Model):
 
     def __str__(self):
         if self.lesson is not None:
-            return "Course: "+self.lesson.course.course_name+", Lesson "+str(self.lesson.lesson_number)+", Hour "+str(self.hour_number)
+            return self.lesson.course.course_name+", Lesson "+str(self.lesson.lesson_number)+", Hour "+str(self.hour_number)
         else:
             return "Special lesson plan with primary key: "+str(self.id)
 

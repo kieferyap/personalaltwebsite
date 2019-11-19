@@ -188,6 +188,16 @@ class SchoolPeriodManager(models.Manager):
         school_period.save()
 
 class SchoolSectionManager(models.Manager):
+    def get_sections(self, school):
+        school_section_model = apps.get_model(app_label='schedules', model_name='SchoolSection')
+        section_model = apps.get_model(app_label='schedules', model_name='Section')
+
+        return section_model.objects.filter(school_section__school=school).values(
+            'id',
+            'school_section__is_special_needs',
+            'school_section__year_level',
+            'section_name').order_by('school_section__year_level', 'section_name')
+
     def add_default_school_sections(self, school):
         school_section_model = apps.get_model(app_label='schedules', model_name='SchoolSection')
         section_model = apps.get_model(app_label='schedules', model_name='Section')
