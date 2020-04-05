@@ -170,7 +170,7 @@ def print_timesheet_pdf(request):
     # Get relevant PDF information
     alt_name = request.POST['ALT Name']
     lc_code = request.POST['LC Code']
-    board_of_education = request.POST['Board of Education']+' BOE'
+    board_of_education = request.POST['Board of Education']
     sales_person = request.POST['Person in charge of sales']
     fax = request.POST['Fax']
     telephone = request.POST['Telephone']
@@ -225,317 +225,154 @@ def print_timesheet_pdf(request):
         current_year = current_year - 1 if start_month + page_index == 12 else current_year
         current_date_string = str(current_month) + '/' + str(current_year)
 
-        for school in schools:
-            # Timesheet title
-            pdf_object.setFont('GenShinGothic-Bold', 12)
-            pdf_object.drawString(248, 790, 'タイムシート')
-            pdf_object.drawString(253, 775, 'Timesheet')
-            pdf_object.setFont('MS PGothic', 6)
-            
-            # Top left: table
-            start_row_y = 770
-            start_row_x = 40
-            top_left_table_kanji_text_x = start_row_x + 12
-            top_left_table_length = 200
-            top_left_japanese_text = ['派遣先名', '就業場所', '社員番号', '派遣ALT名']
-            top_left_japanese_text_x = [top_left_table_kanji_text_x,
-                top_left_table_kanji_text_x,
-                top_left_table_kanji_text_x,
-                top_left_table_kanji_text_x-3]
-            top_left_string_array = ['BOE', 'School', 'LC CODE', 'ALT Name']
-            top_left_string_text_x = [
-                start_row_x+18,
-                start_row_x+15,
-                start_row_x+12,
-                start_row_x+10]
-            top_left_value_array = [board_of_education, school.name, lc_code, alt_name]
-            top_left_row_count = len(top_left_japanese_text)
-            for row_index in range(top_left_row_count):
-                first_row_y = start_row_y - (24*row_index)    
-                second_row_y = first_row_y - 19  
-                top_left_japanese_text_y = first_row_y - 7
-                top_left_english_text_y = top_left_japanese_text_y - 9
-                top_left_value_text_y = first_row_y - 14
-                start_row_x_2 = start_row_x + top_left_table_length
-                
-                # Horizontal borders
-                pdf_object.line(start_row_x, first_row_y, start_row_x_2, first_row_y) # top
-                pdf_object.line(start_row_x, second_row_y, start_row_x_2, second_row_y) # bottom
+        # Top left corner
+        pdf_object.setFont('MS PGothic', 12)
+        pdf_object.drawString(50, 790, 'REPORT SHEET OF WORK 業務実施報告書')
 
-                # Vertical borders
-                pdf_object.line(start_row_x, first_row_y, start_row_x, second_row_y) # left
-                pdf_object.line(start_row_x_2, first_row_y, start_row_x_2, second_row_y) # right
+        pdf_object.setFont('MS PGothic', 20)
+        pdf_object.drawString(70, 767, 'FAX #: 043-203-8821')
 
-                # Middle border
-                pdf_object.line(90, first_row_y, 90, second_row_y) 
+        pdf_object.setFont('MS PGothic', 9)
+        pdf_object.drawString(60, 755, 'Fax to the office on the last working day of the month')
+        
+        box_start_x = 50
+        box_start_y = 785
+        box_end_x = 275
+        box_end_y = 750
+        pdf_object.line(box_start_x, box_start_y, box_end_x, box_start_y)
+        pdf_object.line(box_start_x, box_end_y, box_end_x, box_end_y)
+        pdf_object.line(box_start_x, box_start_y, box_start_x, box_end_y)
+        pdf_object.line(box_end_x, box_start_y, box_end_x, box_end_y)
 
-                # Text: Japanese and English
-                pdf_object.setFont('MS PGothic', 7)
-                pdf_object.drawString(top_left_japanese_text_x[row_index], 
-                    top_left_japanese_text_y, 
-                    top_left_japanese_text[row_index])
-                pdf_object.drawString(top_left_string_text_x[row_index], 
-                    top_left_english_text_y, 
-                    top_left_string_array[row_index])
-                
-                pdf_object.setFont('Throw', 14)
-                if row_index == 0:
-                    pdf_object.setFont('MS PGothic', 10)
-                    top_left_value_text_y += 2
+        # Top right corner: blanks
+        pdf_object.setFont('MS PGothic', 11)
+        pdf_object.drawString(350, 789, 'BOE NAME:')
+        pdf_object.drawString(350, 771, 'NAME (講師名):')
+        pdf_object.drawString(395, 753, 'YEAR:           年 MONTH:          月')
 
-                pdf_object.drawString(95, 
-                    top_left_value_text_y, 
-                    top_left_value_array[row_index])
-            
-            pdf_object.setFont('MS PGothic', 9)
-            pdf_object.drawString(
-                start_row_x+3, 
-                start_row_y-((top_left_row_count)*25)-2, 
-                '※この用紙は、「派遣先・元管理台帳」とともに派遣先・元双方で派遣終了日から三年間の保存が必要です。')
+        pdf_object.line(350, 787, 560, 787)
+        pdf_object.line(350, 769, 560, 769)
+        pdf_object.line(395, 751, 560, 751)
 
-            # Top right:
-            # Management
-            pdf_object.setFont('GenShinGothic-Bold', 8)
-            pdf_object.drawString(389, 780, '管理番号')
-            pdf_object.setFont('GenShinGothic-Bold', 6)
-            pdf_object.drawString(389, 772, 'Management#')
-            pdf_object.setFont('GenShinGothic-Bold', 8)
-            pdf_object.drawString(452, 777, ':')
-            pdf_object.line(449, 770, 557, 770)
+        # Top right corner: fill it in
+        pdf_object.setFont('Throw', 13)
+        pdf_object.drawString(440, 789, board_of_education)
+        pdf_object.drawString(440, 771, alt_name)
+        pdf_object.drawString(432, 753, '%d                   %d'%(current_year, current_month))
+        
+        # Main table
+        # Header
+        pdf_object.line(50, 745, 560, 745)
+        pdf_object.setFont('MS PGothic', 9)
+        pdf_object.drawString(52, 735, 'DATE')
+        pdf_object.drawString(80, 735, 'DAY')
+        pdf_object.drawString(150, 735, 'SCHOOL NAME1')
+        pdf_object.drawString(280, 735, 'DAILY STAMP')
+        pdf_object.drawString(388, 735, 'SCHOOL NAME2')
+        pdf_object.drawString(500, 735, 'DAILY STAMP')
 
-            # Year and month
-            # NOTE: Currently, this supports HEISEI ONLY
-            pdf_object.setFont('GenShinGothic-Bold', 10)
-            pdf_object.drawString(412, 750, '平成')
-            pdf_object.drawString(467, 750, '年')
-            pdf_object.drawString(512, 750, '月')
-            pdf_object.setFont('GenShinGothic-Bold', 8)
-            pdf_object.drawString(419, 740, 'H')
-            pdf_object.drawString(465, 740, 'Year')
-            pdf_object.drawString(512, 740, 'Month')
+        pdf_object.drawString(54, 725, '日付')
+        pdf_object.drawString(79, 725, '曜日')
+        pdf_object.drawString(167, 725, '学校名1')
+        pdf_object.drawString(293, 725, '検収印')
+        pdf_object.drawString(405, 725, '学校名2')
+        pdf_object.drawString(514, 725, '検収印')
 
-            # Year and month values
-            heisei_year = current_year - 1988
-            pdf_object.setFont('GenShinGothic-Bold', 11)
-            pdf_object.drawString(445, 750, str(heisei_year))
-            pdf_object.drawCentredString(500, 750, str(current_month))
+        # Body
+        start_row_y = 706
+        start_row_x = 50
+        end_row_x = 560
+        month_range_object = calendar.monthrange(current_year, current_month)
 
-            # Interac Kanto South
+        # Header horizontal lines
+        header_line_1_y = 720
+        header_line_2_y = 722
+        pdf_object.line(start_row_x, header_line_1_y, 101, header_line_1_y)
+        pdf_object.line(103, header_line_1_y, end_row_x, header_line_1_y)
+        pdf_object.line(start_row_x, header_line_2_y, 101, header_line_2_y)
+        pdf_object.line(103, header_line_2_y, end_row_x, header_line_2_y)
+
+        # Header vertical lines
+        header_start_line_y = 745
+        vert_date_x = 50
+        vert_day_x = 76
+        vert_school_name_1_x = 101
+        vert_school_name_1_x2 = 103
+        vert_daily_stamp_1_x = 275
+        vert_school_name_2_x = 340
+        vert_daily_stamp_2_x = 495
+        vert_right_border_x = 560
+
+        pdf_object.line(start_row_x, header_start_line_y, start_row_x, header_line_1_y)
+        pdf_object.line(vert_day_x, header_start_line_y, vert_day_x, header_line_2_y)
+        pdf_object.line(vert_school_name_1_x, header_start_line_y, vert_school_name_1_x, header_line_2_y)
+        pdf_object.line(vert_school_name_1_x2, header_start_line_y, vert_school_name_1_x2, header_line_2_y)
+        pdf_object.line(vert_daily_stamp_1_x, header_start_line_y, vert_daily_stamp_1_x, header_line_2_y)
+        pdf_object.line(vert_school_name_2_x, header_start_line_y, vert_school_name_2_x, header_line_2_y)
+        pdf_object.line(vert_daily_stamp_2_x, header_start_line_y, vert_daily_stamp_2_x, header_line_2_y)
+        pdf_object.line(vert_right_border_x, header_start_line_y, vert_right_border_x, header_line_1_y)
+
+
+        for day_index in range(month_range_object[1]):
+            # Day
             pdf_object.setFont('MS PGothic', 10)
-            pdf_object.drawString(338, 705, '株式会社インタラック関東南')
-            pdf_object.drawString(337, 688, 'Interac Kanto & South')
+            day_row_y = start_row_y-(17*day_index)
+            readable_day = str(day_index + 1)
 
-            # Header
-            body_start_row_y = start_row_y-((top_left_row_count)*25)-7
-            pdf_object.line(start_row_x, body_start_row_y, 558, body_start_row_y)
-            header_text = [
-                {
-                    'japanese': '就業日',
-                    'english': 'DATE',
-                    'font_size': 6,
-                    'japanese_x': start_row_x+5,
-                    'english_x': start_row_x+7,
-                    'japanese_y': body_start_row_y-8,
-                    'english_y': body_start_row_y-18
-                },
-                {
-                    'japanese': '曜　日',
-                    'english': 'DAY',
-                    'font_size': 6,
-                    'japanese_x': start_row_x+30,
-                    'english_x': start_row_x+35,
-                    'japanese_y': body_start_row_y-8,
-                    'english_y': body_start_row_y-18
-                },
-                {
-                    'japanese': '就業時間',
-                    'english': 'Contractual Time',
-                    'font_size': 8,
-                    'japanese_x': start_row_x+88,
-                    'english_x': start_row_x+73,
-                    'japanese_y': body_start_row_y-9,
-                    'english_y': body_start_row_y-18
-                },
-                {
-                    'japanese': '変更就業時間',
-                    'english': 'Time Changes',
-                    'font_size': 8,
-                    'japanese_x': start_row_x+183,
-                    'english_x': start_row_x+183,
-                    'japanese_y': body_start_row_y-9,
-                    'english_y': body_start_row_y-18
-                },
-                {
-                    'japanese': '休憩時間',
-                    'english': 'Break/min',
-                    'font_size': 7,
-                    'japanese_x': start_row_x+260,
-                    'english_x': start_row_x+260,
-                    'japanese_y': body_start_row_y-8,
-                    'english_y': body_start_row_y-18
-                },
-                {
-                    'japanese': '備考',
-                    'english': 'Remarks',
-                    'font_size': 8,
-                    'japanese_x': start_row_x+375,
-                    'english_x': start_row_x+370,
-                    'japanese_y': body_start_row_y-9,
-                    'english_y': body_start_row_y-18
-                },
-                {
-                    'japanese': '承認印',
-                    'english': 'Hanko',
-                    'font_size': 8,
-                    'japanese_x': start_row_x+484,
-                    'english_x': start_row_x+486,
-                    'japanese_y': body_start_row_y-9,
-                    'english_y': body_start_row_y-18
-                },
-            ]
+            day_row_x = 58
+            if day_index <= 8: # 1~9
+                day_row_x = 61
+            pdf_object.drawString(day_row_x, day_row_y, readable_day)
 
-            for item in header_text:
-                pdf_object.setFont('MS PGothic', item['font_size'])
-                pdf_object.drawString(item['japanese_x'], 
-                    item['japanese_y'], 
-                    item['japanese'])
-                pdf_object.drawString(item['english_x'], 
-                    item['english_y'], 
-                    item['english'])
+            # Weekday
+            pdf_object.setFont('Throw', 11)
+            weekday_readable = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            weekday_x = [79, 79, 78, 80, 81, 79, 79]
+            weekday = (month_range_object[0]+day_index)%7
+            pdf_object.drawString(weekday_x[weekday], day_row_y, weekday_readable[weekday])
 
-            __pdf_draw_body_row_line(pdf_object, body_start_row_y-23)
-
-            day_body_start_row_y = start_row_y-((top_left_row_count)*25)-43
-            month_range_object = calendar.monthrange(current_year, current_month)
-            footer_row_y = 0
-            for day_index in range(month_range_object[1]):
-                # Day
-                pdf_object.setFont('MS PGothic', 10)
-                day_row_y = day_body_start_row_y-(17*day_index)
-                readable_day = str(day_index + 1)
-
-                day_row_x = 48
-                if day_index <= 8: # 1~9
-                    day_row_x = 51
-                pdf_object.drawString(day_row_x, day_row_y, readable_day)
-
-                # Weekday
-                pdf_object.setFont('MS PGothic', 9)
-                weekday_readable = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                weekday = (month_range_object[0]+day_index)%7
-                pdf_object.drawString(72, day_row_y, weekday_readable[weekday])
-
-                # Create a date object using the current year, month, and day
-                datetime_object = datetime.strptime(
-                    str(current_year)+'-'+str(current_month)+'-'+readable_day, 
-                    "%Y-%m-%d")
-
-                # SELECT * FROM schedules WHERE id=school_id AND date = date
-                # If no such result exists, insert it into the database (else, do nothing)
-                pdf_object.setFont('Throw', 12)
-                if YearlySchedule.objects.filter(
-                    school_year=school_year, 
-                    school=school, 
-                    date=datetime_object).exists():
-                    
-                    pdf_object.drawString(108, day_row_y, '8')
-                    pdf_object.drawString(120, day_row_y, '30')
-
-                    if weekday == 2:
-                        pdf_object.drawString(155, day_row_y, '12')
-                    else:
-                        pdf_object.drawString(155, day_row_y, '16')
-                        pdf_object.drawString(308, day_row_y, '60')
-
-                    pdf_object.drawString(170, day_row_y, '00')
-                    pdf_object.drawString(558, day_row_y, '*')
-
-                    if SpecialYearlySchedule.objects.filter(
-                        school_year=school_year, 
-                        special_event=KEY_MTG, 
-                        date=datetime_object).exists() and datetime_object.weekday() == 2:
-                            pdf_object.drawString(217, day_row_y, '8')
-                            pdf_object.drawString(229, day_row_y, '30')
-
-                            pdf_object.drawString(257, day_row_y, '1 1')
-                            pdf_object.drawString(271, day_row_y, '00')
-
-                            pdf_object.drawString(350, day_row_y, 'ALT  Meeting') 
-
-                # ":", "~", ":", ":", "~", ":", "分"
-                pdf_object.setFont('MS PGothic', 9)
-                pdf_object.drawString(115, day_row_y, ':')
-                pdf_object.drawString(165, day_row_y, ':')
-
-                pdf_object.drawString(225, day_row_y, ':')
-                pdf_object.drawString(265, day_row_y, ':')
-                
-                pdf_object.setFont('Arial', 12)
-                pdf_object.drawString(140, day_row_y, '~')
-                pdf_object.drawString(245, day_row_y, '~')
-
-                pdf_object.setFont('MS PGothic', 9)
-                pdf_object.drawString(323, day_row_y, '分')
-                
-                if day_index != month_range_object[1]-1:
-                    __pdf_draw_body_row_line(pdf_object, day_row_y-5)
-                    footer_row_y = day_row_y
-
-            # Days
-            # for school in schools:
-            #     pdf_object.drawString(100, 810, school.name)
-            #     pdf_object.showPage()
-
-            # Footer
-            pdf_object.setFont('MS PGothic', 6)
-
-            footer_line_y = footer_row_y-22
-            pdf_object.line(40, footer_line_y, 510, footer_line_y)
-            pdf_object.line(513, footer_line_y, 558, footer_line_y)
-            pdf_object.drawString(42, footer_row_y-30, '株式会社インタラック関東南')
-            pdf_object.drawString(42, footer_row_y-38, 'Interac Kanto & South')
-            
-            pdf_object.setFont('MS PGothic', 5)
-            pdf_object.drawString(207, footer_row_y-33, '営業担当者/Person in charge of sales')
-            
-            pdf_object.setFont('MS PGothic', 6)
-            pdf_object.drawString(345, footer_row_y-30, '派遣先責任者の署名押印/Person in charge of　receiving')
-            pdf_object.drawString(405, footer_row_y-38, 'dispatch')
-
-            footer_line_y = footer_row_y-42
-            pdf_object.line(40, footer_line_y, 510, footer_line_y)
-            pdf_object.drawString(42, footer_row_y-55, 'FAX: '+fax)
-            pdf_object.drawString(180, footer_row_y-55, sales_person+' TEL: '+telephone)
-            pdf_object.setFont('MS PGothic', 8)
-            pdf_object.drawString(530, footer_row_y-45, '印')
-            pdf_object.setLineWidth(0.4)
-            pdf_object.circle(534, footer_row_y-42, 4.5, fill=0)
-            pdf_object.setLineWidth(0.8)
-
+            # School name
             pdf_object.setFont('Throw', 12)
-            pdf_object.drawString(560, footer_row_y-48, '*')
-            pdf_object.drawString(503, footer_row_y-53, '*')
+            date_string = '%d-%d-%s'%(current_year, current_month, readable_day)
+            datetime_object = datetime.strptime(date_string, '%Y-%m-%d')
+            school_names = YearlySchedule.objects.get_school_names_for_day(datetime_object)
 
-            last_row_line = footer_row_y-63
-            pdf_object.line(start_row_x, last_row_line, 558, last_row_line)
+            for index, school_name in enumerate(school_names):
+                school_index_x = 140 if index == 0 else 388
+                pdf_object.drawString(school_index_x, day_row_y, school_name)
 
-            # Vertical lines
-            body_vertical_line_y = footer_line_y+20
-            vertical_line_x_values = [26, 52, 158, 258, 293, 296]
+            # Draw horizontal lines
+            line_row_y = day_row_y - 3
+            pdf_object.line(start_row_x, line_row_y, 101, line_row_y)
+            pdf_object.line(103, line_row_y, end_row_x, line_row_y)
 
-            pdf_object.line(start_row_x, body_start_row_y, start_row_x, last_row_line)
-            pdf_object.line(510, body_start_row_y, 510, last_row_line)
-            pdf_object.line(513, body_start_row_y, 513, last_row_line)
-            pdf_object.line(558, body_start_row_y, 558, last_row_line)
-            for item in vertical_line_x_values:
-                new_x = start_row_x + item
-                pdf_object.line(new_x, body_start_row_y, new_x, body_vertical_line_y)
+            # Draw vertical lines
+            day_row_y_start = day_row_y + 14
+            day_row_y_end = day_row_y - 3
 
-            pdf_object.line(177, body_vertical_line_y, 177, last_row_line)
-            pdf_object.line(335, body_vertical_line_y, 335, last_row_line)
+            pdf_object.line(vert_date_x, day_row_y_start, vert_date_x, day_row_y_end)
+            pdf_object.line(vert_day_x, day_row_y_start, vert_day_x, day_row_y_end)
+            pdf_object.line(vert_school_name_1_x, day_row_y_start, vert_school_name_1_x, day_row_y_end)
+            pdf_object.line(vert_school_name_1_x2, day_row_y_start, vert_school_name_1_x2, day_row_y_end)
+            pdf_object.line(vert_daily_stamp_1_x, day_row_y_start, vert_daily_stamp_1_x, day_row_y_end)
+            pdf_object.line(vert_school_name_2_x, day_row_y_start, vert_school_name_2_x, day_row_y_end)
+            pdf_object.line(vert_daily_stamp_2_x, day_row_y_start, vert_daily_stamp_2_x, day_row_y_end)
+            pdf_object.line(vert_right_border_x, day_row_y_start, vert_right_border_x, day_row_y_end)
 
+        pdf_object.line(vert_school_name_1_x, line_row_y, vert_school_name_1_x2, line_row_y)
+
+        text_row_y = line_row_y - 10
+        pdf_object.setFont('MS PGothic', 9)
+        pdf_object.drawString(52, text_row_y, '株式会社インタラック')
+        pdf_object.drawString(vert_school_name_2_x+2, text_row_y, '上記のとおり業務を実施した事を報告致します。')
+
+        # picture = static('/media/logo-interac.png')
+        picture_y = text_row_y - 25
+        picture = ImageReader('https://interacnetwork.com/the-content/cream/wp-content/themes/creampress/assets/images/logo-interac.png')
+        pdf_object.drawImage(picture, 52, picture_y, width=80, height=20, preserveAspectRatio=True, mask='auto')
+        
             # New page
-            pdf_object.showPage()
+        pdf_object.showPage()
 
     pdf_object.save()
     return response

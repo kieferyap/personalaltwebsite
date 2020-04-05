@@ -225,6 +225,14 @@ class SchoolRouteManager(models.Manager):
 
 
 class YearlyScheduleManager(models.Manager):
+    def get_school_names_for_day(self, date):
+        yearly_schedule_model = apps.get_model(app_label='schoolyears', model_name='YearlySchedule')
+        schedules = yearly_schedule_model.objects.filter(date=date)
+        schools = []
+        for schedule in schedules:
+            schools.append(schedule.school.name)
+        return schools
+
     def get_schedule_information_for_day(self, date):
         yearly_schedule_model = apps.get_model(app_label='schoolyears', model_name='YearlySchedule')
         special_yearly_schedule_model = apps.get_model(app_label='schoolyears', model_name='SpecialYearlySchedule')
