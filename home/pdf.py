@@ -226,74 +226,79 @@ def print_timesheet_pdf(request):
         current_date_string = str(current_month) + '/' + str(current_year)
 
         # Top left corner
+        cursor_y = 755
         pdf_object.setFont('MS PGothic', 12)
-        pdf_object.drawString(50, 790, 'REPORT SHEET OF WORK 業務実施報告書')
+        pdf_object.drawString(50, cursor_y, 'REPORT SHEET OF WORK 業務実施報告書')
 
         pdf_object.setFont('MS PGothic', 20)
-        pdf_object.drawString(70, 767, 'FAX #: 043-203-8821')
+        pdf_object.drawString(70, cursor_y-23, 'FAX #: 043-203-8821')
 
         pdf_object.setFont('MS PGothic', 9)
-        pdf_object.drawString(60, 755, 'Fax to the office on the last working day of the month')
+        pdf_object.drawString(60, cursor_y-35, 'Fax to the office on the last working day of the month')
         
         box_start_x = 50
-        box_start_y = 785
+        box_start_y = cursor_y-5
         box_end_x = 275
-        box_end_y = 750
-        pdf_object.line(box_start_x, box_start_y, box_end_x, box_start_y)
-        pdf_object.line(box_start_x, box_end_y, box_end_x, box_end_y)
-        pdf_object.line(box_start_x, box_start_y, box_start_x, box_end_y)
-        pdf_object.line(box_end_x, box_start_y, box_end_x, box_end_y)
+        box_end_y = cursor_y-40
+        pdf_object.setLineWidth(2)
+        pdf_object.line(box_start_x, box_start_y, box_end_x, box_start_y) # top border
+        pdf_object.line(box_start_x, box_end_y, box_end_x, box_end_y) # bottom border
+        pdf_object.line(box_start_x, box_start_y+1, box_start_x, box_end_y-1) # left border
+        pdf_object.line(box_end_x, box_start_y+1, box_end_x, box_end_y-1) # right border
+        pdf_object.setLineWidth(1)
 
         # Top right corner: blanks
         pdf_object.setFont('MS PGothic', 11)
-        pdf_object.drawString(350, 789, 'BOE NAME:')
-        pdf_object.drawString(350, 771, 'NAME (講師名):')
-        pdf_object.drawString(395, 753, 'YEAR:           年 MONTH:          月')
+        pdf_object.drawString(350, cursor_y-1, 'BOE NAME:')
+        pdf_object.drawString(350, cursor_y-19, 'NAME (講師名):')
+        pdf_object.drawString(395, cursor_y-37, 'YEAR:           年 MONTH:          月')
 
-        pdf_object.line(350, 787, 560, 787)
-        pdf_object.line(350, 769, 560, 769)
-        pdf_object.line(395, 751, 560, 751)
+        pdf_object.line(350, cursor_y-3, 560, cursor_y-3)
+        pdf_object.line(350, cursor_y-21, 560, cursor_y-21)
+        pdf_object.line(395, cursor_y-39, 560, cursor_y-39)
 
         # Top right corner: fill it in
         pdf_object.setFont('Throw', 13)
-        pdf_object.drawString(440, 789, board_of_education)
-        pdf_object.drawString(440, 771, alt_name)
-        pdf_object.drawString(432, 753, '%d                   %d'%(current_year, current_month))
+        pdf_object.drawString(440, cursor_y-1, board_of_education)
+        pdf_object.drawString(437, cursor_y-19, alt_name+' ('+lc_code+') ')
+        pdf_object.drawString(432, cursor_y-37, '%d                   %d'%(current_year, current_month))
         
         # Main table
         # Header
-        pdf_object.line(50, 745, 560, 745)
+        pdf_object.setLineWidth(2)
+        pdf_object.line(50, cursor_y-45, 560, cursor_y-45)
+        pdf_object.setLineWidth(1)
         pdf_object.setFont('MS PGothic', 9)
-        pdf_object.drawString(52, 735, 'DATE')
-        pdf_object.drawString(80, 735, 'DAY')
-        pdf_object.drawString(150, 735, 'SCHOOL NAME1')
-        pdf_object.drawString(280, 735, 'DAILY STAMP')
-        pdf_object.drawString(388, 735, 'SCHOOL NAME2')
-        pdf_object.drawString(500, 735, 'DAILY STAMP')
+        pdf_object.drawString(52, cursor_y-55, 'DATE')
+        pdf_object.drawString(80, cursor_y-55, 'DAY')
+        pdf_object.drawString(150, cursor_y-55, 'SCHOOL NAME1')
+        pdf_object.drawString(280, cursor_y-55, 'DAILY STAMP')
+        pdf_object.drawString(388, cursor_y-55, 'SCHOOL NAME2')
+        pdf_object.drawString(500, cursor_y-55, 'DAILY STAMP')
 
-        pdf_object.drawString(54, 725, '日付')
-        pdf_object.drawString(79, 725, '曜日')
-        pdf_object.drawString(167, 725, '学校名1')
-        pdf_object.drawString(293, 725, '検収印')
-        pdf_object.drawString(405, 725, '学校名2')
-        pdf_object.drawString(514, 725, '検収印')
+        pdf_object.drawString(54, cursor_y-65, '日付')
+        pdf_object.drawString(79, cursor_y-65, '曜日')
+        pdf_object.drawString(167, cursor_y-65, '学校名1')
+        pdf_object.drawString(293, cursor_y-65, '検収印')
+        pdf_object.drawString(405, cursor_y-65, '学校名2')
+        pdf_object.drawString(514, cursor_y-65, '検収印')
 
         # Body
-        start_row_y = 706
+        start_row_y = cursor_y-84
         start_row_x = 50
         end_row_x = 560
         month_range_object = calendar.monthrange(current_year, current_month)
 
         # Header horizontal lines
-        header_line_1_y = 720
-        header_line_2_y = 722
+        header_line_1_y = cursor_y-70
+        header_line_2_y = cursor_y-68
         pdf_object.line(start_row_x, header_line_1_y, 101, header_line_1_y)
         pdf_object.line(103, header_line_1_y, end_row_x, header_line_1_y)
         pdf_object.line(start_row_x, header_line_2_y, 101, header_line_2_y)
         pdf_object.line(103, header_line_2_y, end_row_x, header_line_2_y)
 
         # Header vertical lines
-        header_start_line_y = 745
+        header_start_line_y = cursor_y-45
         vert_date_x = 50
         vert_day_x = 76
         vert_school_name_1_x = 101
@@ -303,20 +308,30 @@ def print_timesheet_pdf(request):
         vert_daily_stamp_2_x = 495
         vert_right_border_x = 560
 
-        pdf_object.line(start_row_x, header_start_line_y, start_row_x, header_line_1_y)
+        pdf_object.setLineWidth(2)
+        pdf_object.line(start_row_x, header_start_line_y+1, start_row_x, header_line_1_y)
+        pdf_object.setLineWidth(1)
+
         pdf_object.line(vert_day_x, header_start_line_y, vert_day_x, header_line_2_y)
         pdf_object.line(vert_school_name_1_x, header_start_line_y, vert_school_name_1_x, header_line_2_y)
         pdf_object.line(vert_school_name_1_x2, header_start_line_y, vert_school_name_1_x2, header_line_2_y)
         pdf_object.line(vert_daily_stamp_1_x, header_start_line_y, vert_daily_stamp_1_x, header_line_2_y)
+        
+        pdf_object.setLineWidth(2)
         pdf_object.line(vert_school_name_2_x, header_start_line_y, vert_school_name_2_x, header_line_2_y)
+        pdf_object.setLineWidth(1)
+        
         pdf_object.line(vert_daily_stamp_2_x, header_start_line_y, vert_daily_stamp_2_x, header_line_2_y)
-        pdf_object.line(vert_right_border_x, header_start_line_y, vert_right_border_x, header_line_1_y)
+        
+        pdf_object.setLineWidth(2)
+        pdf_object.line(vert_right_border_x, header_start_line_y+1, vert_right_border_x, header_line_1_y)
+        pdf_object.setLineWidth(1)
 
 
         for day_index in range(month_range_object[1]):
             # Day
             pdf_object.setFont('MS PGothic', 10)
-            day_row_y = start_row_y-(17*day_index)
+            day_row_y = start_row_y-(19*day_index)
             readable_day = str(day_index + 1)
 
             day_row_x = 58
@@ -343,23 +358,45 @@ def print_timesheet_pdf(request):
 
             # Draw horizontal lines
             line_row_y = day_row_y - 3
+            if day_index == month_range_object[1]-1:
+                pdf_object.setLineWidth(2)
+                start_row_x -= 1
+                end_row_x += 1
             pdf_object.line(start_row_x, line_row_y, 101, line_row_y)
             pdf_object.line(103, line_row_y, end_row_x, line_row_y)
 
             # Draw vertical lines
-            day_row_y_start = day_row_y + 14
+            day_row_y_start = day_row_y + 16
             day_row_y_end = day_row_y - 3
 
+            pdf_object.setLineWidth(2)
             pdf_object.line(vert_date_x, day_row_y_start, vert_date_x, day_row_y_end)
+            pdf_object.setLineWidth(1)
+
+            if day_index == 0:
+                day_row_y_start -= 2
+
             pdf_object.line(vert_day_x, day_row_y_start, vert_day_x, day_row_y_end)
             pdf_object.line(vert_school_name_1_x, day_row_y_start, vert_school_name_1_x, day_row_y_end)
             pdf_object.line(vert_school_name_1_x2, day_row_y_start, vert_school_name_1_x2, day_row_y_end)
             pdf_object.line(vert_daily_stamp_1_x, day_row_y_start, vert_daily_stamp_1_x, day_row_y_end)
+            
+            pdf_object.setLineWidth(2)
             pdf_object.line(vert_school_name_2_x, day_row_y_start, vert_school_name_2_x, day_row_y_end)
+            pdf_object.setLineWidth(1)
+            
             pdf_object.line(vert_daily_stamp_2_x, day_row_y_start, vert_daily_stamp_2_x, day_row_y_end)
-            pdf_object.line(vert_right_border_x, day_row_y_start, vert_right_border_x, day_row_y_end)
+            
+            if day_index == 0:
+                day_row_y_start += 2
 
+            pdf_object.setLineWidth(2)
+            pdf_object.line(vert_right_border_x, day_row_y_start, vert_right_border_x, day_row_y_end)
+            pdf_object.setLineWidth(1)
+
+        pdf_object.setLineWidth(2)
         pdf_object.line(vert_school_name_1_x, line_row_y, vert_school_name_1_x2, line_row_y)
+        pdf_object.setLineWidth(1)
 
         text_row_y = line_row_y - 10
         pdf_object.setFont('MS PGothic', 9)
