@@ -19,7 +19,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 class HomeTestMethods(StaticLiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(BROWSER_IMPLICIT_WAIT_TIME)
 
         user = User.objects.create(username='tester')

@@ -1,5 +1,5 @@
 import time, os
-import selenium
+import selenium, random
 from lessons.models import *
 from paw.constants.tests import *
 from paw.constants.models import *
@@ -7,6 +7,7 @@ from lessons.constants import *
 from datetime import datetime, timedelta
 from selenium.webdriver.common.keys import Keys
 from home.tests.tests import HomeTestMethods
+from selenium.webdriver.common.action_chains import ActionChains
 
 class DashboardTestCases(HomeTestMethods):
 
@@ -133,3 +134,50 @@ class DashboardTestCases(HomeTestMethods):
         content = self.browser.find_element_by_id('paw-main-content').text
         self.assertIn('Today, %s %s %s ALT Meeting'%(today.strftime('%B'), today.strftime('%e').strip(), today.strftime('(%a)')), content)
         self.assertIn('Tomorrow, %s %s %s Work day'%(tomorrow.strftime('%B'), tomorrow.strftime('%e').strip(), tomorrow.strftime('(%a)')), content)
+
+    # python3 manage.py test home.tests.test_dashboard.DashboardTestCases.test_cron_health_check
+    def test_cron_health_check(self):
+        # self.browser.get('%s' % ('https://forms.gle/p9HrNkaoYgxvuhSR9'))
+        self.browser.get('%s' % ('https://docs.google.com/forms/d/e/1FAIpQLScm1SANAakLMmhLY9zjyrMg-e_dRaXa8YsT6uW6dImFsjXaTQ/viewform'))
+        time.sleep(2)
+        element = self.browser.find_element_by_css_selector('input[name="entry.1746353912"]')
+        element.clear()
+        element.click()
+        element.send_keys('Jon Kiefer Yap (CHB 3008447)')
+        actions = ActionChains(self.browser) 
+        actions.send_keys(Keys.TAB)
+
+        temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
+        temptext = str(temperature[random.randrange(6)])
+        actions.send_keys(temptext)
+        
+        actions.send_keys(Keys.TAB)
+        actions.send_keys(Keys.DOWN)
+        actions.send_keys(Keys.UP)
+
+        actions.send_keys(Keys.TAB)
+        actions.send_keys(Keys.DOWN)
+        actions.send_keys(Keys.UP)
+        
+        actions.send_keys(Keys.TAB)
+        actions.send_keys(Keys.DOWN)
+        actions.send_keys(Keys.UP)
+
+        actions.send_keys(Keys.TAB)
+        actions.send_keys('None')
+
+        actions.send_keys(Keys.TAB)
+        actions.send_keys(Keys.ENTER)
+
+        actions.perform()
+        time.sleep(2)
+
+        actions = ActionChains(self.browser) 
+        actions.send_keys(Keys.TAB)
+        actions.send_keys(Keys.SPACE)
+
+        actions.send_keys(Keys.TAB)
+        actions.send_keys(Keys.TAB)
+        actions.send_keys(Keys.ENTER)
+        actions.perform()
+        time.sleep(5)
