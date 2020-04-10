@@ -22,8 +22,8 @@ class HomeTestMethods(StaticLiveServerTestCase):
         chrome_exec_shim = "/app/chromedriver"
         opts = webdriver.ChromeOptions()
         opts.binary_location = chrome_exec_shim
-        opts.addArguments("--no-sandbox");
-        opts.addArguments("--disable-gpu");
+        opts.add_argument("--no-sandbox");
+        opts.add_argument("--disable-gpu");
         self.browser = webdriver.Chrome(executable_path=chrome_exec_shim, chrome_options=opts)
 
         # self.browser = webdriver.Chrome()
