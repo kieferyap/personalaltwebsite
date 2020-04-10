@@ -19,7 +19,14 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 class HomeTestMethods(StaticLiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Chrome()
+        chrome_exec_shim = "/app/chromedriver"
+        opts = webdriver.ChromeOptions()
+        opts.binary_location = chrome_exec_shim
+        opts.addArguments("--no-sandbox");
+        opts.addArguments("--disable-gpu");
+        self.browser = webdriver.Chrome(executable_path=chrome_exec_shim, chrome_options=opts)
+
+        # self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(BROWSER_IMPLICIT_WAIT_TIME)
 
         user = User.objects.create(username='tester')
