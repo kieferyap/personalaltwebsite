@@ -137,11 +137,9 @@ class DashboardTestCases(HomeTestMethods):
 
     # python3 manage.py test home.tests.test_dashboard.DashboardTestCases.test_cron_health_check
     def test_cron_health_check(self):
-        time.sleep(random.randrange(6))
         self.browser.get('%s' % ('https://forms.gle/p9HrNkaoYgxvuhSR9'))
+        time.sleep(random.randrange(6)+3)
         # self.browser.get('%s' % ('https://docs.google.com/forms/d/e/1FAIpQLScm1SANAakLMmhLY9zjyrMg-e_dRaXa8YsT6uW6dImFsjXaTQ/viewform'))
-        self.browser.implicitly_wait(10)
-        time.sleep(10)
         element = self.browser.find_element_by_css_selector('input')
         element.send_keys('kiefer.yap@interacmail.com')
         element.send_keys(Keys.ENTER)

@@ -24,11 +24,17 @@ class HomeTestMethods(StaticLiveServerTestCase):
     def setUp(self): 
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--disable-extensions')
+        chrome_options.add_argument('--start-maximized')
         chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--proxy-bypass-list=*')
+        chrome_options.add_argument("--proxy-server='direct://'")
+        # chrome_options.add_argument('--window-size=2000,2000')
+        chrome_options.add_argument('--no-headless')
         chrome_options.binary_location = GOOGLE_CHROME_PATH
         self.browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
 
-        # self.browser = webdriver.Chrome()
+        # self.browser = webdriver.Chrome(chrome_options=chrome_options)
         self.browser.implicitly_wait(BROWSER_IMPLICIT_WAIT_TIME)
 
         user = User.objects.create(username='tester')
