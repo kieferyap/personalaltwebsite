@@ -16,18 +16,18 @@ from selenium.webdriver.common.keys import Keys
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
+GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+
 class HomeTestMethods(StaticLiveServerTestCase):
 
     def setUp(self):
-        # chrome_exec_shim = "/app/chromedriver"
-        chrome_exec_shim = "/app/chromedriver"
-        binary_location = '/app/chromium-browser'
-        opts = webdriver.ChromeOptions()
-        opts.binary_location = binary_location
-        opts.add_argument("--no-sandbox");
-        opts.add_argument("--disable-gpu");
-        self.browser = webdriver.Chrome(executable_path=chrome_exec_shim, chrome_options=opts)
-
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.binary_location = GOOGLE_CHROME_PATH
+        browser = webdriver.Chrome(execution_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
+        
         # self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(BROWSER_IMPLICIT_WAIT_TIME)
 
