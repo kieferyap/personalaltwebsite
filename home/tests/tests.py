@@ -31,7 +31,7 @@ class HomeTestMethods(StaticLiveServerTestCase):
         firefox_options.add_argument('--window-size=1920,1080')
         firefox_options.add_argument('--start-maximized')
         firefox_options.add_argument('--headless')
-        # chrome_options.binary_location = GOOGLE_CHROME_PATH
+        firefox_options.binary_location = GOOGLE_CHROME_PATH
         self.browser = webdriver.Firefox(executable_path=CHROMEDRIVER_PATH, firefox_options=firefox_options)
 
         # self.browser = webdriver.Chrome(chrome_options=chrome_options)
