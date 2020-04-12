@@ -141,7 +141,7 @@ class DashboardTestCases(HomeTestMethods):
         self.browser.get('%s' % ('https://forms.gle/p9HrNkaoYgxvuhSR9'))
         # self.browser.get('%s' % ('https://docs.google.com/forms/d/e/1FAIpQLScm1SANAakLMmhLY9zjyrMg-e_dRaXa8YsT6uW6dImFsjXaTQ/viewform'))
         time.sleep(2)
-        element = self.browser.find_element_by_css_selector('input[name="entry.1746353912"]')
+        element = self.browser.find_element_by_css_selector('input[name="entry.589519997"]')
         element.clear()
         element.click()
         element.send_keys('Jon Kiefer Yap (CHB 3008447)')
