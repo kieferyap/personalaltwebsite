@@ -19,9 +19,11 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 class HomeTestMethods(StaticLiveServerTestCase):
 
     def setUp(self):
+        # chrome_exec_shim = "/app/chromedriver"
         chrome_exec_shim = "/app/chromedriver"
+        binary_location = '/app/chromium-browser'
         opts = webdriver.ChromeOptions()
-        opts.binary_location = chrome_exec_shim
+        opts.binary_location = binary_location
         opts.add_argument("--no-sandbox");
         opts.add_argument("--disable-gpu");
         self.browser = webdriver.Chrome(executable_path=chrome_exec_shim, chrome_options=opts)
