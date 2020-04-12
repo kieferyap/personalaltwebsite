@@ -16,25 +16,26 @@ from selenium.webdriver.common.keys import Keys
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
-GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google-chrome'
-CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/firefox'
+CHROMEDRIVER_PATH = '/app/geckodriver'
 
 class HomeTestMethods(StaticLiveServerTestCase):
 
     def setUp(self): 
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--disable-gpu')
-        chrome_options.add_argument('--disable-extensions')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--proxy-bypass-list=*')
-        chrome_options.add_argument("--proxy-server='direct://'")
-        chrome_options.add_argument('--window-size=1920,1080')
-        chrome_options.add_argument('--start-maximized')
-        chrome_options.add_argument('--headless')
-        chrome_options.binary_location = GOOGLE_CHROME_PATH
-        self.browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
+        firefox_options = webdriver.FirefoxOptions()
+        firefox_options.add_argument('--disable-gpu')
+        firefox_options.add_argument('--disable-extensions')
+        firefox_options.add_argument('--no-sandbox')
+        firefox_options.add_argument('--proxy-bypass-list=*')
+        firefox_options.add_argument("--proxy-server='direct://'")
+        firefox_options.add_argument('--window-size=1920,1080')
+        firefox_options.add_argument('--start-maximized')
+        firefox_options.add_argument('--headless')
+        # chrome_options.binary_location = GOOGLE_CHROME_PATH
+        self.browser = webdriver.Firefox(executable_path=CHROMEDRIVER_PATH, firefox_options=firefox_options)
 
         # self.browser = webdriver.Chrome(chrome_options=chrome_options)
+        # self.browser = webdriver.Firefox(firefox_options=firefox_options)
         self.browser.implicitly_wait(BROWSER_IMPLICIT_WAIT_TIME)
 
         user = User.objects.create(username='tester')

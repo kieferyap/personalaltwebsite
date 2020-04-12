@@ -140,7 +140,6 @@ class DashboardTestCases(HomeTestMethods):
         self.browser.get('%s' % ('https://forms.gle/p9HrNkaoYgxvuhSR9'))
         time.sleep(random.randrange(6)+3)
         # self.browser.get('%s' % ('https://docs.google.com/forms/d/e/1FAIpQLScm1SANAakLMmhLY9zjyrMg-e_dRaXa8YsT6uW6dImFsjXaTQ/viewform'))
-        # self.browser.execute_script("document.querySelector('input').text('test')")
         self.browser.set_window_size(1920,1080)
         element = self.browser.find_element_by_css_selector('input')
         element.send_keys('kiefer.yap@interacmail.com')
