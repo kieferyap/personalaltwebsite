@@ -137,8 +137,9 @@ class DashboardTestCases(HomeTestMethods):
 
     # python3 manage.py test home.tests.test_dashboard.DashboardTestCases.test_cron_health_check
     def test_cron_health_check(self):
-        # self.browser.get('%s' % ('https://forms.gle/p9HrNkaoYgxvuhSR9'))
-        self.browser.get('%s' % ('https://docs.google.com/forms/d/e/1FAIpQLScm1SANAakLMmhLY9zjyrMg-e_dRaXa8YsT6uW6dImFsjXaTQ/viewform'))
+        time.sleep(random.randrange(6))
+        self.browser.get('%s' % ('https://forms.gle/p9HrNkaoYgxvuhSR9'))
+        # self.browser.get('%s' % ('https://docs.google.com/forms/d/e/1FAIpQLScm1SANAakLMmhLY9zjyrMg-e_dRaXa8YsT6uW6dImFsjXaTQ/viewform'))
         time.sleep(2)
         element = self.browser.find_element_by_css_selector('input[name="entry.1746353912"]')
         element.clear()
