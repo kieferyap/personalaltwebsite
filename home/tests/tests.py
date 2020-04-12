@@ -17,7 +17,7 @@ from selenium.webdriver.common.keys import Keys
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 GOOGLE_CHROME_PATH = '/app/vendor/firefox/firefox'
-CHROMEDRIVER_PATH = '/app/vendor/firefox/geckodriver'
+CHROMEDRIVER_PATH = '/app/geckodriver'
 
 class HomeTestMethods(StaticLiveServerTestCase):
 
