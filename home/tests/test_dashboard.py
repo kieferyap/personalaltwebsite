@@ -140,15 +140,18 @@ class DashboardTestCases(HomeTestMethods):
         time.sleep(random.randrange(6))
         self.browser.get('%s' % ('https://forms.gle/p9HrNkaoYgxvuhSR9'))
         # self.browser.get('%s' % ('https://docs.google.com/forms/d/e/1FAIpQLScm1SANAakLMmhLY9zjyrMg-e_dRaXa8YsT6uW6dImFsjXaTQ/viewform'))
-        time.sleep(2)
+        self.browser.implicitly_wait(10)
+        time.sleep(10)
         element = self.browser.find_element_by_css_selector('input')
         element.send_keys('kiefer.yap@interacmail.com')
         element.send_keys(Keys.ENTER)
 
+        self.browser.implicitly_wait(5)
         time.sleep(5)
         element = self.browser.find_element_by_css_selector('input[type=password]')
         element.send_keys('dragonite123test')
         element.send_keys(Keys.ENTER)
+        self.browser.implicitly_wait(5)
         time.sleep(5)
 
         element = self.browser.find_element_by_css_selector('input')
@@ -179,9 +182,11 @@ class DashboardTestCases(HomeTestMethods):
         actions.send_keys(Keys.ENTER)
 
         actions.perform()
+        self.browser.implicitly_wait(2)
         time.sleep(2)
 
         actions = ActionChains(self.browser) 
+        actions.send_keys(Keys.TAB)
         actions.send_keys(Keys.TAB)
         actions.send_keys(Keys.SPACE)
 
@@ -189,4 +194,5 @@ class DashboardTestCases(HomeTestMethods):
         actions.send_keys(Keys.TAB)
         actions.send_keys(Keys.ENTER)
         actions.perform()
+        self.browser.implicitly_wait(5)
         time.sleep(5)
