@@ -190,6 +190,9 @@ class DashboardTestCases(HomeTestMethods):
 
             # Second page
             time.sleep(0.5)
+
+            actions = ActionChains(self.browser) 
+            actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
             temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
             temptext = str(temperature[random.randrange(6)])
