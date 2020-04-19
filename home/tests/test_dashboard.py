@@ -137,63 +137,112 @@ class DashboardTestCases(HomeTestMethods):
 
     # python3 manage.py test home.tests.test_dashboard.DashboardTestCases.test_cron_health_check
     def test_cron_health_check(self):
-        today = datetime.now() + timedelta(hours=9)
-        if today.weekday() < 5:
-            self.browser.get('%s' % ('https://forms.gle/p9HrNkaoYgxvuhSR9'))
-            time.sleep(random.randrange(8)+3)
-            # self.browser.get('%s' % ('https://docs.google.com/forms/d/e/1FAIpQLScm1SANAakLMmhLY9zjyrMg-e_dRaXa8YsT6uW6dImFsjXaTQ/viewform'))
-            self.browser.set_window_size(1920,1080)
+        # today = datetime.now() + timedelta(hours=9)
+        today = datetime.now()
+        weekday = today.weekday()
+
+        # weekday = 0 # Monday
+        weekday = 3 # Thursday
+
+        if weekday < 5:
+            self.browser.get('%s' % ('https://forms.gle/3bKtcvcSnabo3KGn6'))
+            # time.sleep(random.randrange(8)+3)
+
+            # Login
+            # self.browser.set_window_size(1920,1080)
+            # element = self.browser.find_element_by_css_selector('input')
+            # element.send_keys('kiefer.yap@interacmail.com')
+            # element.send_keys(Keys.ENTER)
+
+            # self.browser.implicitly_wait(5)
+            # time.sleep(5)
+            # element = self.browser.find_element_by_css_selector('input[type=password]')
+            # element.send_keys('dragonite123test')
+            # element.send_keys(Keys.ENTER)
+            # self.browser.implicitly_wait(5)
+            # time.sleep(5)
+
+            # First page
+
+            # Email address
+            time.sleep(2)
             element = self.browser.find_element_by_css_selector('input')
             element.send_keys('kiefer.yap@interacmail.com')
-            element.send_keys(Keys.ENTER)
 
-            self.browser.implicitly_wait(5)
-            time.sleep(5)
-            element = self.browser.find_element_by_css_selector('input[type=password]')
-            element.send_keys('dragonite123test')
-            element.send_keys(Keys.ENTER)
-            self.browser.implicitly_wait(5)
-            time.sleep(5)
+            dropdown = self.browser.find_element_by_css_selector('.quantumWizMenuPaperselectOptionList')
+            dropdown.click()
 
-            element = self.browser.find_element_by_css_selector('input')
-            element.send_keys('Jon Kiefer Yap (CHB 3008447)')
+            time.sleep(0.5)
             actions = ActionChains(self.browser) 
-            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.DOWN)
+            actions.perform()
+            
+            if weekday in [1, 3]: # Tuesdays/Thursdays
+                time.sleep(0.5)
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.DOWN)
+                actions.perform()
 
+            time.sleep(0.5)
+            actions.send_keys(Keys.ENTER)
+            actions.perform()
+
+            # Go to next page
+            time.sleep(0.5)
+            button = self.browser.find_element_by_css_selector('span.appsMaterialWizButtonPaperbuttonLabel')
+            button.click()
+
+            # # Second page
+            time.sleep(0.5)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
             temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
             temptext = str(temperature[random.randrange(6)])
             actions.send_keys(temptext)
-            
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.DOWN)
-            actions.send_keys(Keys.UP)
-
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.DOWN)
-            actions.send_keys(Keys.UP)
-            
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.DOWN)
-            actions.send_keys(Keys.UP)
-
-            actions.send_keys(Keys.TAB)
-            actions.send_keys('None')
-
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.ENTER)
-
             actions.perform()
-            self.browser.implicitly_wait(2)
-            time.sleep(2)
+            
+            time.sleep(0.5)
+            first_checkbox = self.browser.find_element_by_css_selector('div.quantumWizTogglePapercheckboxInnerBox')
+            first_checkbox.click()
 
-            actions = ActionChains(self.browser) 
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
+            time.sleep(0.5)
             actions.send_keys(Keys.SPACE)
-
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.ENTER)
             actions.perform()
+
+            time.sleep(0.5)
+            actions.send_keys(Keys.SPACE)
+            actions.perform()
+
+            time.sleep(0.5)
+            no_checkbox = self.browser.find_element_by_css_selector('div.freebirdFormviewerViewItemsCheckboxOptionContainer[data-value="No"]')
+            no_checkbox.click()
+
+            
+            time.sleep(0.5)
+            actions.send_keys(Keys.TAB)
+            actions.perform()
+
+            # actions.send_keys(Keys.SPACE)
+            # actions.send_keys(Keys.TAB)
+            # actions.send_keys('None')
+
+            # actions.send_keys(Keys.TAB)
+            # actions.send_keys('None')
+
+            # actions.send_keys(Keys.TAB)
+            # actions.send_keys(Keys.ENTER)
+
+            # self.browser.implicitly_wait(2)
+            # time.sleep(2)
+
+            # actions = ActionChains(self.browser) 
+            # actions.send_keys(Keys.TAB)
+            # actions.send_keys(Keys.TAB)
+            # actions.send_keys(Keys.SPACE)
+
+            # actions.send_keys(Keys.TAB)
+            # actions.send_keys(Keys.TAB)
+            # actions.send_keys(Keys.ENTER)
+            # actions.perform()
             self.browser.implicitly_wait(5)
-            time.sleep(5)
+            time.sleep(60)
