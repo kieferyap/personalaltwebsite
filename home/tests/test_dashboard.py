@@ -140,10 +140,7 @@ class DashboardTestCases(HomeTestMethods):
         # today = datetime.now() + timedelta(hours=9)
         today = datetime.now()
         weekday = today.weekday()
-
-        # weekday = 0 # Monday
-        weekday = 3 # Thursday
-
+        
         if weekday < 5:
             self.browser.get('%s' % ('https://forms.gle/3bKtcvcSnabo3KGn6'))
             # time.sleep(random.randrange(8)+3)
@@ -163,7 +160,6 @@ class DashboardTestCases(HomeTestMethods):
             # time.sleep(5)
 
             # First page
-
             # Email address
             time.sleep(2)
             element = self.browser.find_element_by_css_selector('input')
@@ -192,57 +188,67 @@ class DashboardTestCases(HomeTestMethods):
             button = self.browser.find_element_by_css_selector('span.appsMaterialWizButtonPaperbuttonLabel')
             button.click()
 
-            # # Second page
+            # Second page
             time.sleep(0.5)
-            actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
             temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
             temptext = str(temperature[random.randrange(6)])
             actions.send_keys(temptext)
-            actions.perform()
-            
-            time.sleep(0.5)
-            first_checkbox = self.browser.find_element_by_css_selector('div.quantumWizTogglePapercheckboxInnerBox')
-            first_checkbox.click()
 
-            time.sleep(0.5)
-            actions.send_keys(Keys.SPACE)
-            actions.perform()
-
-            time.sleep(0.5)
-            actions.send_keys(Keys.SPACE)
-            actions.perform()
-
-            time.sleep(0.5)
-            no_checkbox = self.browser.find_element_by_css_selector('div.freebirdFormviewerViewItemsCheckboxOptionContainer[data-value="No"]')
-            no_checkbox.click()
-
-            
-            time.sleep(0.5)
             actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+
+            if weekday in [1, 3]:
+                actions.send_keys(Keys.TAB)
+
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+
+            if weekday in [0,2,4]:
+                actions.send_keys(Keys.TAB)
+
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
             actions.perform()
 
-            # actions.send_keys(Keys.SPACE)
-            # actions.send_keys(Keys.TAB)
-            # actions.send_keys('None')
+            time.sleep(1)
 
-            # actions.send_keys(Keys.TAB)
-            # actions.send_keys('None')
+            # Page 3: Workday
+            if weekday in [1, 3]:
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
 
-            # actions.send_keys(Keys.TAB)
-            # actions.send_keys(Keys.ENTER)
-
-            # self.browser.implicitly_wait(2)
-            # time.sleep(2)
-
-            # actions = ActionChains(self.browser) 
-            # actions.send_keys(Keys.TAB)
-            # actions.send_keys(Keys.TAB)
-            # actions.send_keys(Keys.SPACE)
-
-            # actions.send_keys(Keys.TAB)
-            # actions.send_keys(Keys.TAB)
-            # actions.send_keys(Keys.ENTER)
-            # actions.perform()
-            self.browser.implicitly_wait(5)
-            time.sleep(60)
+            # Page 4
+            time.sleep(1)
+            actions = ActionChains(self.browser) 
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.perform()
+            time.sleep(5)
