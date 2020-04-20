@@ -140,7 +140,6 @@ class DashboardTestCases(HomeTestMethods):
         # today = datetime.now() + timedelta(hours=9)
         today = datetime.now()
         weekday = today.weekday()
-        
         if weekday < 5:
             self.browser.get('%s' % ('https://forms.gle/3bKtcvcSnabo3KGn6'))
             # time.sleep(random.randrange(8)+3)
@@ -165,6 +164,36 @@ class DashboardTestCases(HomeTestMethods):
             element = self.browser.find_element_by_css_selector('input')
             element.send_keys('kiefer.yap@interacmail.com')
 
+            # Go to next page
+            time.sleep(0.5)
+            button = self.browser.find_element_by_css_selector('span.appsMaterialWizButtonPaperbuttonLabel')
+            button.click()
+
+            # Second page
+            time.sleep(0.5)
+            actions = ActionChains(self.browser) 
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
+            temptext = str(temperature[random.randrange(6)])
+            actions.send_keys(temptext)
+
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.perform()
+
+            time.sleep(1)
+
             dropdown = self.browser.find_element_by_css_selector('.quantumWizMenuPaperselectOptionList')
             dropdown.click()
 
@@ -183,75 +212,72 @@ class DashboardTestCases(HomeTestMethods):
             actions.send_keys(Keys.ENTER)
             actions.perform()
 
-            # Go to next page
             time.sleep(0.5)
-            button = self.browser.find_element_by_css_selector('span.appsMaterialWizButtonPaperbuttonLabel')
-            button.click()
-
-            # Second page
-            time.sleep(0.5)
-
-            actions = ActionChains(self.browser) 
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
-            temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
-            temptext = str(temperature[random.randrange(6)])
-            actions.send_keys(temptext)
-
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
-
-            if weekday in [1, 3]:
-                actions.send_keys(Keys.TAB)
-
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
-
-            if weekday in [0,2,4]:
-                actions.send_keys(Keys.TAB)
-
-            actions.send_keys(Keys.TAB)
+            actions = ActionChains(self.browser)
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.SPACE)
             actions.perform()
 
-            time.sleep(1)
-
             # Page 3: Workday
             if weekday in [1, 3]:
+                time.sleep(2)
                 actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
                 actions.perform()
+                time.sleep(0.5)
 
             # Page 4
             time.sleep(1)
-            actions = ActionChains(self.browser) 
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
-            actions.perform()
+            form = self.browser.find_element_by_css_selector('#mG61Hd')
+            form.submit()
+
+            time.sleep(1)
+            button = self.browser.find_element_by_css_selector('.toastAction')
+            button.click()
+            
             time.sleep(5)
