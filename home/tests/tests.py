@@ -9,6 +9,7 @@ from paw.constants.tests import *
 from django.conf import settings
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from schoolyears.constants import ELEMENTARY_SCHOOL, JUNIOR_HIGH_SCHOOL, KEY_MTG, KEY_WORKDAY
+from fake_useragent import UserAgent
 
 from datetime import datetime, timedelta
 from django.test import Client
@@ -32,7 +33,13 @@ class HomeTestMethods(StaticLiveServerTestCase):
         firefox_options.add_argument('--start-maximized')
         firefox_options.add_argument('--headless')
         firefox_options.binary_location = GOOGLE_CHROME_PATH
-        self.browser = webdriver.Firefox(executable_path=CHROMEDRIVER_PATH, firefox_options=firefox_options)
+
+        useragent = UserAgent()
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference("general.useragent.override", useragent.google)
+
+        self.browser = webdriver.Firefox(firefox_profile=profile, executable_path=CHROMEDRIVER_PATH, firefox_options=firefox_options)
+        # self.browser = webdriver.Firefox(firefox_profile=profile)
         # self.browser = webdriver.Firefox(firefox_options=firefox_options)
 
         # self.browser = webdriver.Chrome()

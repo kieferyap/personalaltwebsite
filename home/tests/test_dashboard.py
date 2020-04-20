@@ -163,11 +163,13 @@ class DashboardTestCases(HomeTestMethods):
             time.sleep(2)
             element = self.browser.find_element_by_css_selector('input')
             element.send_keys('kiefer.yap@interacmail.com')
+            print("First page: entered the name")
 
             # Go to next page
             time.sleep(0.5)
             button = self.browser.find_element_by_css_selector('span.appsMaterialWizButtonPaperbuttonLabel')
             button.click()
+            print("First page: clicked the Next button")
 
             # Second page
             time.sleep(0.5)
@@ -191,6 +193,7 @@ class DashboardTestCases(HomeTestMethods):
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.SPACE)
             actions.perform()
+            print("Second page: performed actions for temperature and the triple checkbox.")
 
             time.sleep(1)
 
@@ -211,6 +214,7 @@ class DashboardTestCases(HomeTestMethods):
             time.sleep(0.5)
             actions.send_keys(Keys.ENTER)
             actions.perform()
+            print("Second page: completed the dropdown")
 
             time.sleep(0.5)
             actions = ActionChains(self.browser)
@@ -218,6 +222,7 @@ class DashboardTestCases(HomeTestMethods):
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.SPACE)
             actions.perform()
+            print("Second page: clicked the Next button")
 
             # Page 3: Workday
             if weekday in [1, 3]:
@@ -271,6 +276,8 @@ class DashboardTestCases(HomeTestMethods):
                 actions.perform()
                 time.sleep(0.5)
 
+                print("Third page: completed all checkboces")
+
             # Page 4
             time.sleep(3)
             actions = ActionChains(self.browser) 
@@ -278,5 +285,6 @@ class DashboardTestCases(HomeTestMethods):
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.SPACE)
             actions.perform()
+            print("Last page: Tab-Tab-Space. Not sure if the captcha came out though, so check your mail.")
             
             time.sleep(5)

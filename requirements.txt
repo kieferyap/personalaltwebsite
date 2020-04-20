@@ -13,3 +13,4 @@ django-cleanup
 django-heroku
 selenium
 chromedriver_installer --install-option="--chromedriver-version=2.10" 
+fake-useragent
