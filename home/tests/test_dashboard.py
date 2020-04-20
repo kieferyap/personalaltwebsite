@@ -272,12 +272,11 @@ class DashboardTestCases(HomeTestMethods):
                 time.sleep(0.5)
 
             # Page 4
-            time.sleep(1)
-            form = self.browser.find_element_by_css_selector('#mG61Hd')
-            form.submit()
-
-            time.sleep(1)
-            button = self.browser.find_element_by_css_selector('.toastAction')
-            button.click()
+            time.sleep(3)
+            actions = ActionChains(self.browser) 
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.perform()
             
             time.sleep(5)
