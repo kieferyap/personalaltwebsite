@@ -195,20 +195,19 @@ class DashboardTestCases(HomeTestMethods):
             actions = ActionChains(self.browser) 
             actions.send_keys(Keys.DOWN)
             actions.perform()
-
-            time.sleep(0.5)
-            actions.send_keys(Keys.ENTER)
-            actions.perform()
             time_hour = '8'
             time_minute = '00'
 
             if not is_check_in:
                 time.sleep(0.5)
-                actions.send_keys(Keys.ENTER)
+                actions.send_keys(Keys.DOWN)
                 actions.perform()
                 time_hour = '15'
                 time_minute = '20'
 
+            time.sleep(0.5)
+            actions.send_keys(Keys.ENTER)
+            actions.perform()
             print("Third page: completed the dropdown")
 
             time.sleep(0.5)
@@ -220,7 +219,7 @@ class DashboardTestCases(HomeTestMethods):
             print("Third page: clicked the Next button")
 
             # Page 4: Enter the time
-            time.sleep(0.5)
+            time.sleep(2)
             actions = ActionChains(self.browser)
             actions.send_keys(Keys.TAB)
             actions.send_keys(time_hour)
@@ -230,14 +229,74 @@ class DashboardTestCases(HomeTestMethods):
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.SPACE)
             actions.perform()
+            print("Fourth page: entered the time and clicked the next button")
+
+            if is_check_in:
+                time.sleep(2)
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+                print("Fifth page: completed all checkboces")
 
             # Page 5: Submit button
             time.sleep(1)
             actions = ActionChains(self.browser)
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
-            # actions.send_keys(Keys.SPACE)
+            actions.send_keys(Keys.SPACE)
             actions.perform()
+            print("Last page: completed")
 
             time.sleep(5)
         
@@ -401,6 +460,12 @@ class DashboardTestCases(HomeTestMethods):
 
                 actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                time.sleep(0.5)
+
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
                 actions.perform()
@@ -412,8 +477,8 @@ class DashboardTestCases(HomeTestMethods):
             actions = ActionChains(self.browser) 
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
-            # actions.send_keys(Keys.SPACE)
+            actions.send_keys(Keys.SPACE)
             actions.perform()
             print("Last page: Tab-Tab-Space. Not sure if the captcha came out though, so check your mail.")
             
-            time.sleep(5)
+            time.sleep(500)
