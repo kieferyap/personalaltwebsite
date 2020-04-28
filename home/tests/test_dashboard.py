@@ -135,6 +135,113 @@ class DashboardTestCases(HomeTestMethods):
         self.assertIn('Today, %s %s %s ALT Meeting'%(today.strftime('%B'), today.strftime('%e').strip(), today.strftime('(%a)')), content)
         self.assertIn('Tomorrow, %s %s %s Work day'%(tomorrow.strftime('%B'), tomorrow.strftime('%e').strip(), tomorrow.strftime('(%a)')), content)
 
+    # python3 manage.py test home.tests.test_dashboard.DashboardTestCases.test_check_in_out
+    def test_check_in_out(self):
+        today = datetime.now()
+        weekday = today.weekday()
+        hour = today.hour
+        is_check_in = hour < 9
+
+        if weekday in [1, 3]:
+            self.browser.get('%s' % ('https://forms.gle/7qBeDGS6thm4DyTbA'))
+
+            # First page
+            # Email address
+            time.sleep(2)
+            element = self.browser.find_element_by_css_selector('input')
+            element.send_keys('kiefer.yap@interacmail.com')
+            print("First page: entered the name")
+
+            # Go to next page
+            time.sleep(0.5)
+            button = self.browser.find_element_by_css_selector('span.appsMaterialWizButtonPaperbuttonLabel')
+            button.click()
+            print("First page: clicked the Next button")
+
+            # Second page
+            time.sleep(1)
+            dropdown = self.browser.find_element_by_css_selector('.quantumWizMenuPaperselectOptionList')
+            dropdown.click()
+
+            time.sleep(0.5)
+            actions = ActionChains(self.browser) 
+            actions.send_keys(Keys.DOWN)
+            actions.perform()
+            
+            time.sleep(0.5)
+            actions = ActionChains(self.browser) 
+            actions.send_keys(Keys.DOWN)
+            actions.perform()
+
+            time.sleep(0.5)
+            actions.send_keys(Keys.ENTER)
+            actions.perform()
+            print("Second page: completed the dropdown")
+
+            time.sleep(0.5)
+            actions = ActionChains(self.browser)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.perform()
+            print("Second page: clicked the Next button")
+
+            # Third page
+            time.sleep(1)
+            dropdown = self.browser.find_element_by_css_selector('.quantumWizMenuPaperselectOptionList')
+            dropdown.click()
+
+            time.sleep(0.5)
+            actions = ActionChains(self.browser) 
+            actions.send_keys(Keys.DOWN)
+            actions.perform()
+
+            time.sleep(0.5)
+            actions.send_keys(Keys.ENTER)
+            actions.perform()
+            time_hour = '8'
+            time_minute = '00'
+
+            if not is_check_in:
+                time.sleep(0.5)
+                actions.send_keys(Keys.ENTER)
+                actions.perform()
+                time_hour = '15'
+                time_minute = '20'
+
+            print("Third page: completed the dropdown")
+
+            time.sleep(0.5)
+            actions = ActionChains(self.browser)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.perform()
+            print("Third page: clicked the Next button")
+
+            # Page 4: Enter the time
+            time.sleep(0.5)
+            actions = ActionChains(self.browser)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(time_hour)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(time_minute)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.perform()
+
+            # Page 5: Submit button
+            time.sleep(1)
+            actions = ActionChains(self.browser)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            # actions.send_keys(Keys.SPACE)
+            actions.perform()
+
+            time.sleep(5)
+        
+
     # python3 manage.py test home.tests.test_dashboard.DashboardTestCases.test_cron_health_check
     def test_cron_health_check(self):
         # today = datetime.now() + timedelta(hours=9)
@@ -174,7 +281,7 @@ class DashboardTestCases(HomeTestMethods):
             # Second page
             time.sleep(0.5)
             actions = ActionChains(self.browser) 
-            actions.send_keys(Keys.TAB)
+            # actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
             temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
             temptext = str(temperature[random.randrange(6)])
@@ -224,7 +331,30 @@ class DashboardTestCases(HomeTestMethods):
             actions.perform()
             print("Second page: clicked the Next button")
 
-            # Page 3: Workday
+            # Page 3: First confirmation
+            time.sleep(1)
+            dropdown = self.browser.find_element_by_css_selector('.quantumWizMenuPaperselectOptionList')
+            dropdown.click()
+
+            time.sleep(0.5)
+            actions = ActionChains(self.browser) 
+            actions.send_keys(Keys.DOWN)
+            actions.perform()
+
+            time.sleep(0.5)
+            actions.send_keys(Keys.ENTER)
+            actions.perform()
+            print("Third page: completed the dropdown")
+
+            time.sleep(0.5)
+            actions = ActionChains(self.browser)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.SPACE)
+            actions.perform()
+            print("Third page: clicked the Next button")
+
+            # Page 4: Workday
             if weekday in [1, 3]:
                 time.sleep(2)
                 actions = ActionChains(self.browser) 
@@ -275,15 +405,14 @@ class DashboardTestCases(HomeTestMethods):
                 actions.send_keys(Keys.SPACE)
                 actions.perform()
                 time.sleep(0.5)
-
-                print("Third page: completed all checkboces")
+                print("Fourth page: completed all checkboces")
 
             # Page 4
             time.sleep(3)
             actions = ActionChains(self.browser) 
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
+            # actions.send_keys(Keys.SPACE)
             actions.perform()
             print("Last page: Tab-Tab-Space. Not sure if the captcha came out though, so check your mail.")
             
