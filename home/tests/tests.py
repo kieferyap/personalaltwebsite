@@ -25,7 +25,6 @@ class HomeTestMethods(StaticLiveServerTestCase):
     def setUp(self): 
         firefox_options = webdriver.FirefoxOptions()
         firefox_options.add_argument('--disable-gpu')
-        firefox_options.add_argument('--disable-extensions')
         firefox_options.add_argument('--no-sandbox')
         firefox_options.add_argument('--proxy-bypass-list=*')
         firefox_options.add_argument("--proxy-server='direct://'")
@@ -34,13 +33,16 @@ class HomeTestMethods(StaticLiveServerTestCase):
         firefox_options.add_argument('--headless')
         firefox_options.binary_location = GOOGLE_CHROME_PATH
 
-        useragent = UserAgent()
+        # useragent = UserAgent()
+        # profile = webdriver.FirefoxProfile()
+        # profile.set_preference("general.useragent.override", useragent.google)
         profile = webdriver.FirefoxProfile()
-        profile.set_preference("general.useragent.override", useragent.google)
+        profile.set_preference('intl.accept_languages', 'en-us')
 
-        self.browser = webdriver.Firefox(firefox_profile=profile, executable_path=CHROMEDRIVER_PATH, firefox_options=firefox_options)
+        # self.browser = webdriver.Firefox(firefox_profile=profile, executable_path=CHROMEDRIVER_PATH, firefox_options=firefox_options)
         # self.browser = webdriver.Firefox(firefox_profile=profile)
-        # self.browser = webdriver.Firefox(firefox_options=firefox_options)
+        self.browser = webdriver.Firefox(firefox_options=firefox_options, firefox_profile=profile)
+        # self.browser.install_addon("/mnt/kiefer-files/code/personalaltwebsite/home/tests/doz4@hotmail.com.xpi", temporary=True)
 
         # self.browser = webdriver.Chrome()
         # self.browser = webdriver.Firefox()

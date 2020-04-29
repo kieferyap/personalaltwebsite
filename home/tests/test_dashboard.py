@@ -298,7 +298,7 @@ class DashboardTestCases(HomeTestMethods):
             actions.perform()
             print("Last page: completed")
 
-            time.sleep(5)
+            time.sleep(500)
         
 
     # python3 manage.py test home.tests.test_dashboard.DashboardTestCases.test_cron_health_check
@@ -308,6 +308,7 @@ class DashboardTestCases(HomeTestMethods):
         weekday = today.weekday()
         if weekday < 5:
             self.browser.get('%s' % ('https://forms.gle/3bKtcvcSnabo3KGn6'))
+
             # time.sleep(random.randrange(8)+3)
 
             # Login
@@ -390,31 +391,31 @@ class DashboardTestCases(HomeTestMethods):
             actions.perform()
             print("Second page: clicked the Next button")
 
-            # Page 3: First confirmation
-            time.sleep(1)
-            dropdown = self.browser.find_element_by_css_selector('.quantumWizMenuPaperselectOptionList')
-            dropdown.click()
-
-            time.sleep(0.5)
-            actions = ActionChains(self.browser) 
-            actions.send_keys(Keys.DOWN)
-            actions.perform()
-
-            time.sleep(0.5)
-            actions.send_keys(Keys.ENTER)
-            actions.perform()
-            print("Third page: completed the dropdown")
-
-            time.sleep(0.5)
-            actions = ActionChains(self.browser)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
-            actions.perform()
-            print("Third page: clicked the Next button")
-
             # Page 4: Workday
             if weekday in [1, 3]:
+                # Page 3: First confirmation
+                time.sleep(1)
+                dropdown = self.browser.find_element_by_css_selector('.quantumWizMenuPaperselectOptionList')
+                dropdown.click()
+
+                time.sleep(0.5)
+                actions = ActionChains(self.browser) 
+                actions.send_keys(Keys.DOWN)
+                actions.perform()
+
+                time.sleep(0.5)
+                actions.send_keys(Keys.ENTER)
+                actions.perform()
+                print("Third page: completed the dropdown")
+
+                time.sleep(0.5)
+                actions = ActionChains(self.browser)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+                print("Third page: clicked the Next button")
+
                 time.sleep(2)
                 actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
@@ -479,6 +480,50 @@ class DashboardTestCases(HomeTestMethods):
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.SPACE)
             actions.perform()
+
+            # Recaptcha
+            time.sleep(5)
+            
+            from PIL import Image
+            import io
+            from io import BytesIO
+            from os.path import expanduser
+
+            # Crop image
+            element = self.browser.find_element_by_css_selector('iframe[title="recaptcha challenge"]')
+            location = element.location
+            size = element.size
+
+            left = int(location['x'])
+            top = int(location['y'])
+            right = int(location['x'] + size['width'])
+            bottom = int(location['y'] + size['height'])
+
+            screenshot_png = self.browser.get_screenshot_as_png()
+            image = Image.open(BytesIO(screenshot_png))
+            image = image.crop((left, top, right, bottom))
+            image = image.copy()
+            image_file = io.BytesIO()
+            image.save(image_file, "PNG")
+            image_file.seek(0)
+
+            path  = expanduser('~/')
+            image.save(path + 'F1-info.png')
+
+            # Send image to captcha-busting service
+            from home.tests.dbc import deathbycaptcha
+            timeout = 20
+
+            client = deathbycaptcha.SocketClient(username="keeperaft", password="testDragonite456")
+            balance = client.get_balance()
+            print("Balance", balance)
+
+            captcha = client.decode(image_file, timeout)
+            time.sleep(20)
+            print(client.get_balance(), captcha, "<<<<")
+
             print("Last page: Tab-Tab-Space. Not sure if the captcha came out though, so check your mail.")
             
             time.sleep(500)
+
+
