@@ -306,24 +306,27 @@ class DashboardTestCases(HomeTestMethods):
         # today = datetime.now() + timedelta(hours=9)
         today = datetime.now()
         weekday = today.weekday()
+
+        # time.sleep(random.randrange(8)+3)
+
+        # Login
+        # self.browser.get('%s' % ('https://mail.google.com'))
+        
+        # self.browser.set_window_size(1920,1080)
+        # element = self.browser.find_element_by_css_selector('input')
+        # element.send_keys('kiefer.yap@interacmail.com')
+        # element.send_keys(Keys.ENTER)
+
+        # self.browser.implicitly_wait(5)
+        # time.sleep(5)
+        # element = self.browser.find_element_by_css_selector('input[type=password]')
+        # element.send_keys('dragonite123test')
+        # element.send_keys(Keys.ENTER)
+        # self.browser.implicitly_wait(5)
+        # time.sleep(5)
+        
         if weekday < 5:
             self.browser.get('%s' % ('https://forms.gle/3bKtcvcSnabo3KGn6'))
-
-            # time.sleep(random.randrange(8)+3)
-
-            # Login
-            # self.browser.set_window_size(1920,1080)
-            # element = self.browser.find_element_by_css_selector('input')
-            # element.send_keys('kiefer.yap@interacmail.com')
-            # element.send_keys(Keys.ENTER)
-
-            # self.browser.implicitly_wait(5)
-            # time.sleep(5)
-            # element = self.browser.find_element_by_css_selector('input[type=password]')
-            # element.send_keys('dragonite123test')
-            # element.send_keys(Keys.ENTER)
-            # self.browser.implicitly_wait(5)
-            # time.sleep(5)
 
             # First page
             # Email address
@@ -341,7 +344,7 @@ class DashboardTestCases(HomeTestMethods):
             # Second page
             time.sleep(0.5)
             actions = ActionChains(self.browser) 
-            # actions.send_keys(Keys.TAB)
+            actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
             temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
             temptext = str(temperature[random.randrange(6)])
@@ -482,7 +485,7 @@ class DashboardTestCases(HomeTestMethods):
             actions.perform()
 
             # Recaptcha
-            time.sleep(5)
+            time.sleep(8)
             
             from PIL import Image
             import io
@@ -512,15 +515,22 @@ class DashboardTestCases(HomeTestMethods):
 
             # Send image to captcha-busting service
             from home.tests.dbc import deathbycaptcha
-            timeout = 20
 
-            client = deathbycaptcha.SocketClient(username="keeperaft", password="testDragonite456")
-            balance = client.get_balance()
-            print("Balance", balance)
+            username = "keeperaft"
+            password = "testDragonite456"
+            client = deathbycaptcha.SocketClient(username, password)
 
-            captcha = client.decode(image_file, timeout)
-            time.sleep(20)
-            print(client.get_balance(), captcha, "<<<<")
+            try:
+                balance = client.get_balance()
+                print("Balance", balance)
+            except deathbycaptcha.AccessDeniedException:
+                print("Access denied")
+                # Access to DBC API denied, check your credentials and/or balance
+
+
+            # captcha = client.decode(image_file, timeout)
+            # time.sleep(20)
+            # print(client.get_balance(), captcha, "<<<<")
 
             print("Last page: Tab-Tab-Space. Not sure if the captcha came out though, so check your mail.")
             

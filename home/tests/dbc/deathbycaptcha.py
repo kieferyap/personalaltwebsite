@@ -135,25 +135,10 @@ class Client(object):
 
     """Death by Captcha API Client."""
 
-    def __init__(self, username=None, password=None, authtoken=None):
-        self.is_verbose = False
-        self.userpwd = {'username': username, 'password': password}
-        if authtoken:
-            self.authtoken = {'authtoken': authtoken}
-        else:
-            self.authtoken = None
 
-    def get_auth(self):
+    
 
-        if self.authtoken:
-            return self.authtoken.copy()
-        else:
-            return self.userpwd.copy()
-
-    def _log(self, cmd, msg=''):
-        if self.is_verbose:
-            print('%d %s %s' % (time.time(), cmd, msg.rstrip()))
-        return self
+    
 
     def close(self):
         pass
@@ -165,17 +150,13 @@ class Client(object):
         """Fetch user details -- ID, balance, rate and banned status."""
         raise NotImplementedError()
 
-    def get_balance(self):
-        """Fetch user balance (in US cents)."""
-        return self.get_user().get('balance')
+    
 
     def get_captcha(self, cid):
         """Fetch a CAPTCHA details -- ID, text and correctness flag."""
         raise NotImplementedError()
 
-    def get_text(self, cid):
-        """Fetch a CAPTCHA text."""
-        return self.get_captcha(cid).get('text') or None
+    
 
     def report(self, cid):
         """Report a CAPTCHA as incorrectly solved."""
@@ -190,44 +171,7 @@ class Client(object):
         """
         raise NotImplementedError()
 
-    def decode(self, captcha=None, timeout=None, **kwargs):
-        """
-        Try to solve a CAPTCHA.
-
-        See Client.upload() for arguments details.
-
-        Uploads a CAPTCHA, polls for its status periodically with arbitrary
-        timeout (in seconds), returns CAPTCHA details if (correctly) solved.
-
-        """
-        if not timeout:
-            if not captcha:
-                timeout = DEFAULT_TOKEN_TIMEOUT
-            else:
-                timeout = DEFAULT_TIMEOUT
-
-        deadline = time.time() + (max(0, timeout) or DEFAULT_TIMEOUT)
-        uploaded_captcha = self.upload(captcha, **kwargs)
-        if uploaded_captcha:
-            intvl_idx = 0  # POLL_INTERVAL index
-            while deadline > time.time() and not uploaded_captcha.get('text'):
-                intvl, intvl_idx = self._get_poll_interval(intvl_idx)
-                time.sleep(intvl)
-                uploaded_captcha = self.get_captcha(uploaded_captcha['captcha'])
-            if (uploaded_captcha.get('text') and
-                    uploaded_captcha.get('is_correct')):
-                return uploaded_captcha
-
-    def _get_poll_interval(self, idx):
-        """Returns poll interval and next index depending on index provided"""
-
-        if len(POLLS_INTERVAL) > idx:
-            intvl = POLLS_INTERVAL[idx]
-        else:
-            intvl = DFLT_POLL_INTERVAL
-        idx += 1
-
-        return intvl, idx
+    
 
 
 class HttpClient(Client):
@@ -296,16 +240,32 @@ class HttpClient(Client):
             return response
 
 
-class SocketClient(Client):
+class SocketClient(object):
 
     """Death by Captcha socket API client."""
 
     TERMINATOR = bytes('\r\n', 'ascii')
 
     def __init__(self, username=None, password=None, authtoken=None):
-        Client.__init__(self, username=None, password=None, authtoken=None)
+        self.is_verbose = False
+        self.userpwd = {'username': username, 'password': password}
+        if authtoken:
+            self.authtoken = {'authtoken': authtoken}
+        else:
+            self.authtoken = None
         self.socket_lock = threading.Lock()
         self.socket = None
+
+    def get_auth(self):
+        if self.authtoken:
+            return self.authtoken.copy()
+        else:
+            return self.userpwd.copy()
+
+    def _log(self, cmd, msg=''):
+        if self.is_verbose:
+            print('%d %s %s' % (time.time(), cmd, msg.rstrip()))
+        return self
 
     def close(self):
         if self.socket:
@@ -336,6 +296,14 @@ class SocketClient(Client):
 
     def __del__(self):
         self.close()
+
+    def get_balance(self):
+        """Fetch user balance (in US cents)."""
+        return self.get_user().get('balance')
+
+    def get_text(self, cid):
+        """Fetch a CAPTCHA text."""
+        return self.get_captcha(cid).get('text') or None
 
     def _sendrecv(self, sock, buf):
         self._log('SEND', buf)
@@ -371,12 +339,53 @@ class SocketClient(Client):
                 return str(response.rstrip(self.TERMINATOR), 'utf-8')
         raise IOError('send/recv timed out')
 
+    def decode(self, captcha=None, timeout=None, **kwargs):
+        """
+        Try to solve a CAPTCHA.
+
+        See Client.upload() for arguments details.
+
+        Uploads a CAPTCHA, polls for its status periodically with arbitrary
+        timeout (in seconds), returns CAPTCHA details if (correctly) solved.
+
+        """
+        if not timeout:
+            if not captcha:
+                timeout = DEFAULT_TOKEN_TIMEOUT
+            else:
+                timeout = DEFAULT_TIMEOUT
+
+        deadline = time.time() + (max(0, timeout) or DEFAULT_TIMEOUT)
+        uploaded_captcha = self.upload(captcha, **kwargs)
+        if uploaded_captcha:
+            intvl_idx = 0  # POLL_INTERVAL index
+            while deadline > time.time() and not uploaded_captcha.get('text'):
+                intvl, intvl_idx = self._get_poll_interval(intvl_idx)
+                time.sleep(intvl)
+                uploaded_captcha = self.get_captcha(uploaded_captcha['captcha'])
+            if (uploaded_captcha.get('text') and
+                    uploaded_captcha.get('is_correct')):
+                return uploaded_captcha
+
+    def _get_poll_interval(self, idx):
+        """Returns poll interval and next index depending on index provided"""
+
+        if len(POLLS_INTERVAL) > idx:
+            intvl = POLLS_INTERVAL[idx]
+        else:
+            intvl = DFLT_POLL_INTERVAL
+        idx += 1
+
+        return intvl, idx
+
     def _call(self, cmd, data=None):
         if data is None:
             data = {}
         data['cmd'] = cmd
         data['version'] = API_VERSION
         request = json_encode(data)
+
+        print("Credentials:", self.userpwd)
 
         response = None
         for i in range(2):
