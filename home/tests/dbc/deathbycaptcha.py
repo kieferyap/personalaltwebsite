@@ -174,12 +174,28 @@ class Client(object):
     
 
 
-class HttpClient(Client):
+class HttpClient(object):
 
     """Death by Captcha HTTP API client."""
 
-    def __init__(self, *args):
-        Client.__init__(self, *args)
+    def __init__(self, username=None, password=None, authtoken=None):
+        self.is_verbose = True
+        self.userpwd = {'username': username, 'password': password}
+        if authtoken:
+            self.authtoken = {'authtoken': authtoken}
+        else:
+            self.authtoken = None
+
+    def get_auth(self):
+        if self.authtoken:
+            return self.authtoken.copy()
+        else:
+            return self.userpwd.copy()
+
+    def _log(self, cmd, msg=''):
+        if self.is_verbose:
+            print('%d %s %s' % (time.time(), cmd, msg.rstrip()))
+        return self
 
     def _call(self, cmd, payload=None, headers=None, files=None):
         if headers is None:
@@ -219,12 +235,20 @@ class HttpClient(Client):
     def get_user(self):
         return self._call('user', self.get_auth()) or {'user': 0}
 
+    def get_balance(self):
+        """Fetch user balance (in US cents)."""
+        return self.get_user().get('balance')
+
     def get_captcha(self, cid):
         return self._call('captcha/%d' % cid) or {'captcha': 0}
 
     def report(self, cid):
         return not self._call('captcha/%d/report' % cid,
                               self.get_auth()).get('is_correct')
+
+    def get_text(self, cid):
+        """Fetch a CAPTCHA text."""
+        return self.get_captcha(cid).get('text') or None
 
     def upload(self, captcha=None, **kwargs):
         banner = kwargs.get('banner', '')
@@ -239,6 +263,45 @@ class HttpClient(Client):
         if response.get('captcha'):
             return response
 
+    def decode(self, captcha=None, timeout=None, **kwargs):
+        """
+        Try to solve a CAPTCHA.
+
+        See Client.upload() for arguments details.
+
+        Uploads a CAPTCHA, polls for its status periodically with arbitrary
+        timeout (in seconds), returns CAPTCHA details if (correctly) solved.
+
+        """
+        if not timeout:
+            if not captcha:
+                timeout = DEFAULT_TOKEN_TIMEOUT
+            else:
+                timeout = DEFAULT_TIMEOUT
+
+        deadline = time.time() + (max(0, timeout) or DEFAULT_TIMEOUT)
+        uploaded_captcha = self.upload(captcha, **kwargs)
+        if uploaded_captcha:
+            intvl_idx = 0  # POLL_INTERVAL index
+            while deadline > time.time() and not uploaded_captcha.get('text'):
+                intvl, intvl_idx = self._get_poll_interval(intvl_idx)
+                time.sleep(intvl)
+                uploaded_captcha = self.get_captcha(uploaded_captcha['captcha'])
+            if (uploaded_captcha.get('text') and
+                    uploaded_captcha.get('is_correct')):
+                return uploaded_captcha
+
+    def _get_poll_interval(self, idx):
+        """Returns poll interval and next index depending on index provided"""
+
+        if len(POLLS_INTERVAL) > idx:
+            intvl = POLLS_INTERVAL[idx]
+        else:
+            intvl = DFLT_POLL_INTERVAL
+        idx += 1
+
+        return intvl, idx
+
 
 class SocketClient(object):
 
@@ -247,7 +310,7 @@ class SocketClient(object):
     TERMINATOR = bytes('\r\n', 'ascii')
 
     def __init__(self, username=None, password=None, authtoken=None):
-        self.is_verbose = False
+        self.is_verbose = True
         self.userpwd = {'username': username, 'password': password}
         if authtoken:
             self.authtoken = {'authtoken': authtoken}
@@ -394,6 +457,7 @@ class SocketClient(object):
             self.socket_lock.acquire()
             try:
                 sock = self.connect()
+                print(sock, "<< HERE")
                 response = self._sendrecv(sock, request)
             except IOError as err:
                 sys.stderr.write(str(err) + "\n")

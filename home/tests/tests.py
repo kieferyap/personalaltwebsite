@@ -24,19 +24,19 @@ class HomeTestMethods(StaticLiveServerTestCase):
 
     def setUp(self): 
         firefox_options = webdriver.FirefoxOptions()
-        firefox_options.add_argument('--disable-gpu')
-        firefox_options.add_argument('--no-sandbox')
-        firefox_options.add_argument('--proxy-bypass-list=*')
-        firefox_options.add_argument("--proxy-server='direct://'")
-        firefox_options.add_argument('--window-size=1920,1080')
-        firefox_options.add_argument('--start-maximized')
-        firefox_options.add_argument('--headless')
-        firefox_options.binary_location = GOOGLE_CHROME_PATH
+        # firefox_options.add_argument('--disable-gpu')
+        # firefox_options.add_argument('--no-sandbox')
+        # firefox_options.add_argument('--proxy-bypass-list=*')
+        # firefox_options.add_argument("--proxy-server='direct://'")
+        # firefox_options.add_argument('--window-size=1920,1080')
+        # firefox_options.add_argument('--start-maximized')
+        # firefox_options.add_argument('--headless')
+        # firefox_options.binary_location = GOOGLE_CHROME_PATH
 
         # useragent = UserAgent()
         # profile = webdriver.FirefoxProfile()
-        # profile.set_preference("general.useragent.override", useragent.google)
         profile = webdriver.FirefoxProfile()
+        profile.set_preference("general.useragent.override", 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:75.0) Gecko/20100101 Firefox/75.0')
         profile.set_preference('intl.accept_languages', 'en-us')
 
         # self.browser = webdriver.Firefox(firefox_profile=profile, executable_path=CHROMEDRIVER_PATH, firefox_options=firefox_options)

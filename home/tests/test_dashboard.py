@@ -292,7 +292,7 @@ class DashboardTestCases(HomeTestMethods):
                 actions = ActionChains(self.browser)
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.TAB)
-                # actions.send_keys(Keys.SPACE)
+                actions.send_keys(Keys.SPACE)
                 actions.perform()
                 print("Last page: completed")
 
@@ -486,57 +486,103 @@ class DashboardTestCases(HomeTestMethods):
             actions = ActionChains(self.browser) 
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
-            # actions.send_keys(Keys.SPACE)
+            actions.send_keys(Keys.SPACE)
             actions.perform()
 
             # Recaptcha
-            # time.sleep(8)
+            time.sleep(2)
             
-            # from PIL import Image
-            # import io
-            # from io import BytesIO
-            # from os.path import expanduser
+            # While the element is visible
+            is_element_visible = self.browser.find_element_by_css_selector('iframe[title="recaptcha challenge"]').is_displayed()
+            actions = ActionChains(self.browser)
+            actions.send_keys(Keys.PAGE_UP).perform()
+            timeout = 30
 
-            # # Crop image
-            # element = self.browser.find_element_by_css_selector('iframe[title="recaptcha challenge"]')
-            # location = element.location
-            # size = element.size
+            captcha_element = self.browser.find_element_by_css_selector('iframe[title="recaptcha challenge"]')
 
-            # left = int(location['x'])
-            # top = int(location['y'])
-            # right = int(location['x'] + size['width'])
-            # bottom = int(location['y'] + size['height'])
+            self.browser.switch_to.frame(captcha_element);
+            next_button = self.browser.find_element_by_css_selector('#recaptcha-verify-button')
+            next_button_text = next_button.text # May be "VERIFY" or "SKIP"
 
-            # screenshot_png = self.browser.get_screenshot_as_png()
-            # image = Image.open(BytesIO(screenshot_png))
-            # image = image.crop((left, top, right, bottom))
-            # image = image.copy()
-            # image_file = io.BytesIO()
-            # image.save(image_file, "PNG")
-            # image_file.seek(0)
+            self.browser.switch_to.default_content()
+            
+            while is_element_visible:
+                # Take a screenshot and send it to the captcha buster
+                from PIL import Image
+                import io
+                from io import BytesIO
+                from os.path import expanduser
 
-            # path  = expanduser('~/')
-            # image.save(path + 'F1-info.png')
+                # Crop image
+                actions = ActionChains(self.browser)
+                actions.move_to_element(captcha_element).perform()
+                
+                location = captcha_element.location
+                size = captcha_element.size
 
-            # # Send image to captcha-busting service
-            # from home.tests.dbc import deathbycaptcha
+                left = int(location['x'])
+                top = int(location['y'])
+                right = int(location['x'] + size['width'])
+                bottom = int(location['y'] + size['height'])
 
-            # username = "keeperaft"
-            # password = "testDragonite456"
-            # client = deathbycaptcha.SocketClient(username, password)
+                new_size = 200,300
+                width_ratio = size['width']/200
+                height_ratio = size['height']/300
+                screenshot_png = self.browser.get_screenshot_as_png()
+                image = Image.open(BytesIO(screenshot_png))
+                image = image.crop((left, top, right, bottom))
+                image = image.copy()
+                image = image.resize(new_size, Image.ANTIALIAS)
+                image_file = io.BytesIO()
+                image.save(image_file, "PNG")
+                image_file.seek(0)
 
-            # try:
-            #     balance = client.get_balance()
-            #     print("Balance", balance)
-            # except deathbycaptcha.AccessDeniedException:
-            #     print("Access denied")
-            #     # Access to DBC API denied, check your credentials and/or balance
+                path  = expanduser('~/')
+                image.save(path + 'F1-info.png')
 
+                # Send image to captcha-busting service                
+                from home.tests.dbc import deathbycaptcha
 
-            # captcha = client.decode(image_file, timeout)
-            # time.sleep(20)
-            # print(client.get_balance(), captcha, "<<<<")
+                username = "keeperaft"
+                password = "testDragonite456"
+                client = deathbycaptcha.HttpClient(username, password)
 
+                balance = client.get_balance()
+                print("Balance", balance)
+
+                captcha = client.decode(image_file, timeout=timeout, type=2)
+                print("Captcha:", captcha)
+                
+                if next_button_text == 'VERIFY':
+                    if captcha is not None and captcha['text'] != '[]':
+                        coordinates = eval(captcha['text'])
+                        for coordinate in coordinates:
+                            action = ActionChains(self.browser)
+                            action.move_to_element_with_offset(captcha_element, coordinate[0]*width_ratio, coordinate[1]*height_ratio)
+                            action.click()
+                            action.perform()
+
+                    else:
+                        self.browser.switch_to.frame(captcha_element);
+                        next_button = self.browser.find_element_by_css_selector('#recaptcha-verify-button')
+                        next_button.click()
+
+                        self.browser.switch_to.default_content()
+
+                if next_button_text == 'SKIP':
+                    coordinates = eval(captcha['text'])
+                    for coordinate in coordinates:
+                        action = ActionChains(self.browser)
+                        action.move_to_element_with_offset(captcha_element, coordinate[0]*width_ratio, coordinate[1]*height_ratio)
+                        action.click()
+                        action.perform()
+
+                    self.browser.switch_to.frame(captcha_element);
+                    next_button = self.browser.find_element_by_css_selector('#recaptcha-verify-button')
+                    next_button.click()
+
+                    self.browser.switch_to.default_content()
+            
             print("Last page: Tab-Tab-Space. Not sure if the captcha came out though, so check your mail.")
             
             time.sleep(500)
