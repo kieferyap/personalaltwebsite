@@ -143,7 +143,10 @@ class DashboardTestCases(HomeTestMethods):
         is_check_in = hour < 9
 
         if weekday in [1, 3]:
-            self.browser.get('%s' % ('https://forms.gle/7qBeDGS6thm4DyTbA'))
+            form_link = 'https://forms.gle/JdHP1EU7jQTihmAc6'
+            if is_check_in:
+                form_link = 'https://forms.gle/7qBeDGS6thm4DyTbA'
+            self.browser.get('%s' % (form_link))
 
             # First page
             # Email address
@@ -277,26 +280,35 @@ class DashboardTestCases(HomeTestMethods):
 
                 actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
                 actions.perform()
                 time.sleep(0.5)
 
-                actions = ActionChains(self.browser) 
-                actions.send_keys(Keys.TAB)
-                actions.send_keys(Keys.TAB)
-                actions.send_keys(Keys.SPACE)
-                actions.perform()
-                time.sleep(0.5)
                 print("Fifth page: completed all checkboces")
 
-            # Page 5: Submit button
-            time.sleep(1)
-            actions = ActionChains(self.browser)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
-            actions.perform()
-            print("Last page: completed")
+                 # Page 5: Submit button
+                time.sleep(1)
+                actions = ActionChains(self.browser)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.TAB)
+                # actions.send_keys(Keys.SPACE)
+                actions.perform()
+                print("Last page: completed")
+
+            else:
+                time.sleep(1)
+                actions = ActionChains(self.browser)
+                actions.send_keys(Keys.TAB)
+                actions.send_keys(Keys.SPACE)
+                actions.perform()
+
+                time.sleep(0.5)
+                element = self.browser.find_element_by_css_selector('.freebirdThemedFilledButtonM2')
+                element.click()
+
+                print("Last page: completed")
+
 
             time.sleep(500)
         
@@ -306,7 +318,6 @@ class DashboardTestCases(HomeTestMethods):
         # today = datetime.now() + timedelta(hours=9)
         today = datetime.now()
         weekday = today.weekday()
-
         # time.sleep(random.randrange(8)+3)
 
         # Login
@@ -345,7 +356,7 @@ class DashboardTestCases(HomeTestMethods):
             time.sleep(0.5)
             actions = ActionChains(self.browser) 
             actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.TAB)
+            # actions.send_keys(Keys.TAB)
             temperature = ['35.7', '35.8', '35.9', '36.0', '36.1', '36.2']
             temptext = str(temperature[random.randrange(6)])
             actions.send_keys(temptext)
@@ -460,13 +471,7 @@ class DashboardTestCases(HomeTestMethods):
                 actions.send_keys(Keys.TAB)
                 actions.send_keys(Keys.SPACE)
                 actions.perform()
-                time.sleep(0.5)
-
-                actions = ActionChains(self.browser) 
-                actions.send_keys(Keys.TAB)
-                actions.send_keys(Keys.SPACE)
-                actions.perform()
-                time.sleep(0.5)
+                time.sleep(1)
 
                 actions = ActionChains(self.browser) 
                 actions.send_keys(Keys.TAB)
@@ -481,51 +486,51 @@ class DashboardTestCases(HomeTestMethods):
             actions = ActionChains(self.browser) 
             actions.send_keys(Keys.TAB)
             actions.send_keys(Keys.TAB)
-            actions.send_keys(Keys.SPACE)
+            # actions.send_keys(Keys.SPACE)
             actions.perform()
 
             # Recaptcha
-            time.sleep(8)
+            # time.sleep(8)
             
-            from PIL import Image
-            import io
-            from io import BytesIO
-            from os.path import expanduser
+            # from PIL import Image
+            # import io
+            # from io import BytesIO
+            # from os.path import expanduser
 
-            # Crop image
-            element = self.browser.find_element_by_css_selector('iframe[title="recaptcha challenge"]')
-            location = element.location
-            size = element.size
+            # # Crop image
+            # element = self.browser.find_element_by_css_selector('iframe[title="recaptcha challenge"]')
+            # location = element.location
+            # size = element.size
 
-            left = int(location['x'])
-            top = int(location['y'])
-            right = int(location['x'] + size['width'])
-            bottom = int(location['y'] + size['height'])
+            # left = int(location['x'])
+            # top = int(location['y'])
+            # right = int(location['x'] + size['width'])
+            # bottom = int(location['y'] + size['height'])
 
-            screenshot_png = self.browser.get_screenshot_as_png()
-            image = Image.open(BytesIO(screenshot_png))
-            image = image.crop((left, top, right, bottom))
-            image = image.copy()
-            image_file = io.BytesIO()
-            image.save(image_file, "PNG")
-            image_file.seek(0)
+            # screenshot_png = self.browser.get_screenshot_as_png()
+            # image = Image.open(BytesIO(screenshot_png))
+            # image = image.crop((left, top, right, bottom))
+            # image = image.copy()
+            # image_file = io.BytesIO()
+            # image.save(image_file, "PNG")
+            # image_file.seek(0)
 
-            path  = expanduser('~/')
-            image.save(path + 'F1-info.png')
+            # path  = expanduser('~/')
+            # image.save(path + 'F1-info.png')
 
-            # Send image to captcha-busting service
-            from home.tests.dbc import deathbycaptcha
+            # # Send image to captcha-busting service
+            # from home.tests.dbc import deathbycaptcha
 
-            username = "keeperaft"
-            password = "testDragonite456"
-            client = deathbycaptcha.SocketClient(username, password)
+            # username = "keeperaft"
+            # password = "testDragonite456"
+            # client = deathbycaptcha.SocketClient(username, password)
 
-            try:
-                balance = client.get_balance()
-                print("Balance", balance)
-            except deathbycaptcha.AccessDeniedException:
-                print("Access denied")
-                # Access to DBC API denied, check your credentials and/or balance
+            # try:
+            #     balance = client.get_balance()
+            #     print("Balance", balance)
+            # except deathbycaptcha.AccessDeniedException:
+            #     print("Access denied")
+            #     # Access to DBC API denied, check your credentials and/or balance
 
 
             # captcha = client.decode(image_file, timeout)
