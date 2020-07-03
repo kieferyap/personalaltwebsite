@@ -130,7 +130,7 @@
 		<div class="hidden remove-me">
 			<modal-content id="edit-period-type-{{ schedule.periods.section_period_type.id }}">
 				<modal-head>
-					{% trans "Edit Period Profile for" %} {{ schedule.date|date:"F d (D)" }}{% trans '<span class="japanese-day"></span>' %}
+					{% trans "Edit Period Profile for" %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:"(D)" }}
 				</modal-head>
 
 				<form class="modal-form" action="/schedules/edit_schedule_period_profile"  method="POST">
@@ -152,7 +152,7 @@
 			{% if schedule.periods.is_day_empty %}
 			<modal-content id="add-all-classes-{{ schedule.periods.section_period_type.id }}">
 				<modal-head>
-					{% trans "Add All Classes, Same Lesson Plan for" %} {{ schedule.date|date:"F d (D)" }}{% trans '<span class="japanese-day"></span>' %}
+					{% trans "Add All Classes, Same Lesson Plan for" %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:"(D)" }}
 				</modal-head>
 
 				<form class="modal-form" action="/schedules/add_all_classes"  method="POST">
@@ -222,7 +222,7 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-6 page-subheader-left">
-				{{ schedule.date|date:"F d (D)" }}{% trans '<span class="japanese-day"></span>' %}
+				{{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:"(D)" }}
 				<span class="default-profile-marker set-data-color" data-color="#{{ schedule.periods.school_period_type.get_period_type_color }}">
 					{{ schedule.periods.school_period_type.period_name }}
 				</span>
