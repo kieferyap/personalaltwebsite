@@ -218,6 +218,51 @@
 				</modal-footer>
 				</form>
 			</modal-content>
+			{% else %}
+			<modal-content id="edit-lesson-plans-{{ schedule.periods.section_period_type.id }}">
+				<modal-head>
+					{% trans "Edit Lesson Plans for " %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:" (D)" }}
+				</modal-head>
+
+				<form class="modal-form" action="/schedules/edit_lesson_plans"  method="POST">
+				<modal-body>
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="control-label">
+							{% trans "Lesson Plan" %}
+						</label>
+						<select class="form-control"
+							name="lesson-plan-id"
+							required="">
+							<option value="0">N/A</option>
+							{% for lesson_plan in all_lesson_plans %}
+							<option value="{{ lesson_plan.id }}">
+								{{ lesson_plan }}
+							</option>
+							{% endfor %}
+							{% for period in schedule.periods.school_periods %}
+								{% if period.class_info %}
+								<option value="{{ period.class_info.lesson_plan.id }}">
+									Same as 
+									{% with period.class_info.section.school_section.is_special_needs as is_special_needs %}
+									{% with period.class_info.section.school_section.year_level as year_level %}
+									{% with period.class_info.section.section_name as section_name %}
+										{% include "section-name-base.html" %}
+									{% endwith %}
+									{% endwith %}
+									{% endwith %}
+								</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					</div>
+				</modal-body>
+
+				<modal-footer>
+					
+				</modal-footer>
+				</form>
+			</modal-content>
 			{% endif %}
 		</div>
 		<div class="row">
@@ -236,6 +281,15 @@
 					data-target="#add-all-classes-{{ schedule.periods.section_period_type.id }}" 
 					name="add-all-classes-button">
 						{{ glyphicon_plus }} {% trans "Add All Classes" %}
+				</button>
+				{% else %}
+				<button 
+					type="button" 
+					class="btn btn-tertiary"
+					data-toggle="modal" 
+					data-target="#edit-lesson-plans-{{ schedule.periods.section_period_type.id }}" 
+					name="edit-lesson-plans-button">
+						{{ glyphicon_edit }} {% trans "Edit Lesson Plans" %}
 				</button>
 				{% endif %}
 				<button 
