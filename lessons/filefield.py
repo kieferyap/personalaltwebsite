@@ -22,7 +22,7 @@ class ContentTypeRestrictedFileField(FileField):
             self.content_types = kwargs.pop("content_types")
             self.max_upload_size = kwargs.pop("max_upload_size")
         else:
-            self.content_types = ['image/*']
+            self.content_types = ['*']
             self.max_upload_size = 5242880
 
         super(ContentTypeRestrictedFileField, self).__init__(*args, **kwargs)

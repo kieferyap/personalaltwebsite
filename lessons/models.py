@@ -90,7 +90,7 @@ class Activity(models.Model):
 
 class ActivityFile(models.Model):
     activity = models.ForeignKey(Activity)
-    activity_file = ContentTypeRestrictedFileField(upload_to='static/files/', content_types=['text/plain', 'image/*', 'audio/*', 'video/*', 'application/*'], max_upload_size=5242880)
+    activity_file = ContentTypeRestrictedFileField(upload_to='static/files/', content_types=['*'], max_upload_size=52428800)
     original_filename = models.CharField(max_length=128)
     notes = models.TextField()
     is_link_to_existing_file = models.BooleanField(default=False)
