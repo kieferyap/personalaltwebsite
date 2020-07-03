@@ -226,7 +226,9 @@
 
 				<form class="modal-form" action="/schedules/edit_lesson_plans"  method="POST">
 				<modal-body>
+					This sets one lesson plan to use for all classes.<br/>
 					{% csrf_token %}
+					<input type="hidden" name="date" value='{{ schedule.date|date:"Y-m-d" }}'/>
 					<div class="form-group">
 						<label class="control-label">
 							{% trans "Lesson Plan" %}

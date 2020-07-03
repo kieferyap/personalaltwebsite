@@ -360,6 +360,21 @@ def edit_schedule_period_profile(request):
     return JsonResponse({'is_success': True, 'messages': None})
 
 @require_POST
+def edit_lesson_plans(request):
+    date = request.POST['date']
+    lesson_plan_id = request.POST['lesson-plan-id']
+
+    sections = SectionPeriod.objects.filter(date=date)
+    for section in sections:
+        lesson_plan = get_object_or_404(LessonPlan, pk=int(lesson_plan_id))
+        lesson_plan.pk = None
+        lesson_plan.save()
+        section.lesson_plan = lesson_plan
+        section.save()
+
+    return JsonResponse({'is_success': True, 'messages': None})
+
+@require_POST
 def assign_book(request):
     school_section = get_object_or_404(SchoolSection, pk=int(request.POST['school_section_id']))
     course = get_object_or_404(Course, pk=int(request.POST['book']))
