@@ -123,7 +123,7 @@
 					<form action="/print_day" method="POST">
 						{% csrf_token %}
 						<input type="hidden" name="date" value="{{ day.date.year }}-{{ day.date.month }}-{{ day.date.day }}" />
-						<button class="btn btn-primary" type="submit">
+						<button class="btn btn-secondary" type="submit">
 							{{ glyphicon_print }} {% trans "Print" %}
 						</button>
 					</form>
