@@ -77,7 +77,7 @@ def view_schedule(request, school_year_id=None, school_id=None, year=None, month
         context['school'] = school
         context['current_date'] = dt.strptime("%s-%s-01"%(year, month), "%Y-%m-%d")
         context['all_sections'] = SchoolSectionManager().get_sections(school)
-        context['all_lesson_plans'] = LessonPlan.objects.filter(is_premade_lesson_plan=True).all()
+        context['all_lesson_plans'] = LessonPlan.objects.filter(is_premade_lesson_plan=True).all().order_by('lesson__course__course_name', 'lesson__lesson_number', 'hour_number')
 
         return schedule_render_page(request,
                            page=VIEW_SCHEDULE,

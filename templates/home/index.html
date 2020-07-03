@@ -52,6 +52,7 @@
 			<th class="col-xs-3">{% trans "School" %}</th>
 			<th>{% trans "Schedule" %}</th>
 			<th class="col-xs-2 hidden-xs">{% trans "Notes" %}</th>
+			<th class="col-xs-2 hidden-xs">{% trans "Actions" %}</th>
 		</tr>
 		{% for day in week %}
 		<tr>
@@ -118,10 +119,19 @@
 						</span>	
 						{% endfor %}
 					</td>
+					<td>
+					<form action="/print_week" method="POST">
+						{% csrf_token %}
+						<input type="hidden" name="date" value="{{ day.date.year }}-{{ day.date.month }}-{{ day.date.day }}" />
+						<button class="btn btn-primary" type="submit">
+							{{ glyphicon_print }} {% trans "Print" %}
+						</button>
+					</form>
+					</td>
 				</tr>
 				{% endfor %}
 			{% else %}
-				<td colspan="2" class="vertical-center">
+				<td colspan="3" class="vertical-center">
 					<i>{% trans "There are no scheduled classes for this day." %}</i>
 				</td>
 				<td>
