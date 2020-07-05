@@ -119,7 +119,7 @@
 						</span>	
 						{% endfor %}
 					</td>
-					<td>
+					<td class="hidden-xs">
 					<form action="/print_day" method="POST">
 						{% csrf_token %}
 						<input type="hidden" name="date" value="{{ day.date.year }}-{{ day.date.month }}-{{ day.date.day }}" />
