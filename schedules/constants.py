@@ -18,6 +18,7 @@ UPDATE_SECTION = 'update_section'
 SCHOOL_PERIODS = 'school_periods'
 DELETE_SECTION = 'delete_section'
 ADD_ALL_CLASSES = 'add_all_classes'
+WEEKLY_TEMPLATE = 'weekly_template'
 GET_LAST_PERIOD = 'get_last_period'
 EDIT_LESSON_HOUR = 'edit_lesson_hour'
 SCHEDULE_MANAGER = 'schedule_manager'
@@ -50,6 +51,7 @@ EXPRESSION_UPDATE_SECTION = r'^'+UPDATE_SECTION+'/(?P<field>[a-z_]+)$'
 EXPRESSION_SCHOOL_PERIODS = r'^'+SCHOOL_PERIODS+'$'
 EXPRESSION_DELETE_SECTION = r'^'+DELETE_SECTION+'/(?P<section_id>[0-9_]+)$'
 EXPRESSION_ADD_ALL_CLASSES = r'^'+ADD_ALL_CLASSES+'$'
+EXPRESSION_WEEKLY_TEMPLATE = r'^'+WEEKLY_TEMPLATE+'$'
 EXPRESSION_GET_LAST_PERIOD = r'^'+GET_LAST_PERIOD+'$'
 EXPRESSION_EDIT_LESSON_HOUR = r'^'+EDIT_LESSON_HOUR+'$'
 EXPRESSION_SCHEDULE_MANAGER = r'^'+SCHEDULE_MANAGER+'$'
@@ -120,6 +122,7 @@ MSG_ADD_SECTION = _('The section has been successfully added.')
 NAME_SCHEDULE_MANAGER = _('Schedule Manager')
 NAME_SECTIONS_COURSES = _('Year Level Manager')
 NAME_SCHOOL_PERIODS = _('School Periods')
+NAME_WEEKLY_TEMPLATE = _('Weekly Templates')
 
 PERIOD_TYPES = (
     (PERIOD_TYPE_NORMAL, NAME_PERIOD_TYPE_NORMAL),

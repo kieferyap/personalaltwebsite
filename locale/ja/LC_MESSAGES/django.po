@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-05 17:43+0900\n"
+"POT-Creation-Date: 2020-07-05 22:59+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,11 +103,11 @@ msgid "Activity File"
 msgstr "プリント"
 
 #: lessons/constants.py:63 lessons/constants.py:71 lessons/constants.py:77
-#: schedules/constants.py:75 templates/home/dashboard-day-view.html:80
+#: schedules/constants.py:79 templates/home/dashboard-day-view.html:80
 #: templates/home/index.html:54 templates/lessons/flashcard-table.html:13
 #: templates/lessons/handouts-worksheets.html:46
 #: templates/lessons/target-language-table.html:12
-#: templates/schedules/view_schedule.html:311
+#: templates/schedules/view_schedule.html:367
 #: templates/schedules/view_section.html:49
 msgid "Notes"
 msgstr "メモ"
@@ -540,184 +540,190 @@ msgstr "中学校"
 msgid "High School"
 msgstr "高校"
 
-#: paw/settings.py:150
+#: paw/settings.py:163
 msgid "English"
 msgstr "英語"
 
-#: paw/settings.py:151
+#: paw/settings.py:164
 msgid "Japanese"
 msgstr "日本語"
 
-#: schedules/constants.py:72
+#: schedules/constants.py:76
 msgid "This schedule type is used on:"
 msgstr "日課表の使う日"
 
-#: schedules/constants.py:73
+#: schedules/constants.py:77
 msgid "Period Name"
 msgstr "番号"
 
-#: schedules/constants.py:74 templates/schedules/view_schedule.html:256
+#: schedules/constants.py:78 templates/schedules/view_schedule.html:312
 msgid "Teacher"
 msgstr "担任の先生"
 
-#: schedules/constants.py:76 templates/schedules/view_section.html:48
+#: schedules/constants.py:80 templates/schedules/view_section.html:48
 msgid "Student Count"
 msgstr "学徒数"
 
-#: schedules/constants.py:77 templates/lessons/courses.html:25
+#: schedules/constants.py:81 templates/lessons/courses.html:25
 msgid "Lesson Number"
 msgstr "番号"
 
-#: schedules/constants.py:78
+#: schedules/constants.py:82
 msgid "Hour Number"
 msgstr "時間目"
 
-#: schedules/constants.py:79
+#: schedules/constants.py:83
 msgid "Period Profile"
 msgstr "日課表"
 
-#: schedules/constants.py:87
+#: schedules/constants.py:91
 msgid "Normal days"
 msgstr "普通の日"
 
-#: schedules/constants.py:88
+#: schedules/constants.py:92
 msgid "Mondays"
 msgstr "毎月曜日"
 
-#: schedules/constants.py:89
+#: schedules/constants.py:93
 msgid "Wednesdays"
 msgstr "毎水曜日"
 
-#: schedules/constants.py:90
+#: schedules/constants.py:94
 msgid "Special days"
 msgstr "特別な日"
 
-#: schedules/constants.py:91
+#: schedules/constants.py:95
 msgid "Saturdays"
 msgstr "土曜日"
 
-#: schedules/constants.py:93
+#: schedules/constants.py:97
 msgid "This section does not exist."
 msgstr ""
 
-#: schedules/constants.py:94
+#: schedules/constants.py:98
 msgid "Please select a school from the dropdown."
 msgstr "学校を選択して下さい。"
 
-#: schedules/constants.py:95
+#: schedules/constants.py:99
 msgid "Please select a book from the dropdown."
 msgstr "本を選択して下さい。"
 
-#: schedules/constants.py:96
+#: schedules/constants.py:100
 msgid "Please select the correct values for school, school year, and month."
 msgstr "情報の保存中にエラーが発生しました。"
 
-#: schedules/constants.py:97
+#: schedules/constants.py:101
 msgid "Adding a new class without its section is not possible."
 msgstr "情報の保存中にエラーが発生しました。"
 
-#: schedules/constants.py:98
+#: schedules/constants.py:102
 msgid "Users can add a maximum of 8 sections."
 msgstr "組の最大数に達しました。"
 
-#: schedules/constants.py:99
+#: schedules/constants.py:103
 msgid "Users can add a maximum of 7 period profiles."
 msgstr "日課表の最大数に達しました。"
 
-#: schedules/constants.py:100
+#: schedules/constants.py:104
 msgid "Users can add a maximum of 10 time periods."
 msgstr "時限の最大数に達しました。"
 
-#: schedules/constants.py:102
+#: schedules/constants.py:106
 msgid "The class has been successfully deleted."
 msgstr "削除しました。"
 
-#: schedules/constants.py:103
+#: schedules/constants.py:107
 msgid "The period profile for the specified day has been successfully updated."
 msgstr "編集しました。"
 
-#: schedules/constants.py:104
+#: schedules/constants.py:108
 msgid "The section has been successfully updated."
 msgstr "編集しました。"
 
-#: schedules/constants.py:105
+#: schedules/constants.py:109
 msgid "The section count has been successfully updated."
 msgstr "編集しました。"
 
-#: schedules/constants.py:106
+#: schedules/constants.py:110
 msgid "The book has been successfully updated."
 msgstr "編集しました。"
 
-#: schedules/constants.py:107
+#: schedules/constants.py:111
 msgid "The period profile has been successfully added."
 msgstr "追加しました。"
 
-#: schedules/constants.py:108
+#: schedules/constants.py:112
 msgid "The period profile has been successfully updated."
 msgstr "編集しました。"
 
-#: schedules/constants.py:109
+#: schedules/constants.py:113
 msgid "The class has been successfully added to the schedule."
 msgstr "追加しました。"
 
-#: schedules/constants.py:110
+#: schedules/constants.py:114
 msgid "The lesson number and hour number has been successfully updated."
 msgstr "編集しました。"
 
-#: schedules/constants.py:111
+#: schedules/constants.py:115
 msgid ""
 "The specified book has been successfully assigned to the specified year "
 "level."
 msgstr "成功しました。"
 
-#: schedules/constants.py:112
+#: schedules/constants.py:116
 msgid ""
 "The specified book to the specified year level has been successfully re-"
 "assigned."
 msgstr "成功しました。"
 
-#: schedules/constants.py:113
+#: schedules/constants.py:117
 msgid ""
 "The specified book to the specified year level has been successfully deleted."
 msgstr "削除しました。"
 
-#: schedules/constants.py:114
+#: schedules/constants.py:118
 msgid "The specified section has been successfully deleted."
 msgstr "削除しました。"
 
-#: schedules/constants.py:115
+#: schedules/constants.py:119
 msgid "The section could not be deleted because it is the last section."
 msgstr "最後の組ですので、削除で着ません。"
 
-#: schedules/constants.py:116
+#: schedules/constants.py:120
 msgid "The section has been successfully added."
 msgstr "追加しました。"
 
-#: schedules/constants.py:118 templates/schedules/schedule_manager.html:7
+#: schedules/constants.py:122 templates/schedules/schedule_manager.html:7
 #: templates/schedules/schedule_manager.html:18
+#: templates/schedules/weekly_template.html:7
+#: templates/schedules/weekly_template.html:18
 msgid "Schedule Manager"
 msgstr "時間割を管理"
 
-#: schedules/constants.py:119 templates/schedules/sections_courses.html:7
+#: schedules/constants.py:123 templates/schedules/sections_courses.html:7
 #: templates/schedules/sections_courses.html:19
 msgid "Year Level Manager"
 msgstr "等級を管理"
 
 # Unsure translation
-#: schedules/constants.py:120 templates/schedules/school_periods.html:7
+#: schedules/constants.py:124 templates/schedules/school_periods.html:7
 #: templates/schedules/school_periods.html:32
 msgid "School Periods"
 msgstr "日課表"
 
-#: schedules/constants.py:140
+#: schedules/constants.py:125
+msgid "Weekly Templates"
+msgstr ""
+
+#: schedules/constants.py:145
 msgid "Normal Schedule"
 msgstr "普通の日課表"
 
-#: schedules/constants.py:141
+#: schedules/constants.py:146
 msgid "Monday Schedule"
 msgstr "月曜日の日課表"
 
-#: schedules/constants.py:142
+#: schedules/constants.py:147
 msgid "Wednesday Schedule"
 msgstr "水曜日の日課表"
 
@@ -906,6 +912,8 @@ msgstr "▲"
 #: templates/schedules/schedule_manager.html:53
 #: templates/schedules/school_periods.html:64
 #: templates/schedules/sections_courses.html:50
+#: templates/schedules/weekly_template.html:45
+#: templates/schedules/weekly_template.html:53
 msgid "Loading"
 msgstr "読み込み中"
 
@@ -1048,11 +1056,13 @@ msgstr "<span class='hidden'>%(day_text)s</span>"
 #: templates/home/dashboard-day-view.html:7
 #: templates/schedules/view_schedule.html:133
 #: templates/schedules/view_schedule.html:155
-#: templates/schedules/view_schedule.html:225
+#: templates/schedules/view_schedule.html:224
+#: templates/schedules/view_schedule.html:272
 msgid "<span class=\"japanese-day\"></span>"
 msgstr "日"
 
 #: templates/home/dashboard-day-view.html:21 templates/home/index.html:43
+#: templates/home/index.html:127
 #: templates/lessons/lesson-plan-information.html:48
 msgid "Print"
 msgstr "印刷"
@@ -1075,15 +1085,15 @@ msgstr "組"
 #: templates/lessons/lesson-header.html:8
 #: templates/lessons/lesson-header.html:25
 #: templates/lessons/lesson_plans.html:42
-#: templates/schedules/view_schedule.html:257
-#: templates/schedules/view_schedule.html:295
+#: templates/schedules/view_schedule.html:313
+#: templates/schedules/view_schedule.html:351
 #: templates/schedules/view_section_period.html:71
 msgid "Lesson"
 msgstr "レッスン"
 
 #: templates/home/dashboard-day-view.html:72
 #: templates/lessons/lesson-plan-information.html:40
-#: templates/schedules/view_schedule.html:295
+#: templates/schedules/view_schedule.html:351
 #: templates/schedules/view_section_period.html:71
 msgid "Hour"
 msgstr "<span class='hidden'></span>"
@@ -1103,7 +1113,7 @@ msgstr "レッスンの情報"
 msgid "Activities"
 msgstr "活動"
 
-#: templates/home/dashboard-day-view.html:158 templates/home/index.html:125
+#: templates/home/dashboard-day-view.html:158 templates/home/index.html:135
 msgid "There are no scheduled classes for this day."
 msgstr "授業の予定が入っていません"
 
@@ -1120,6 +1130,7 @@ msgstr "日付"
 #: templates/schedules/schedule_manager.html:42
 #: templates/schedules/school_periods.html:58
 #: templates/schedules/sections_courses.html:44
+#: templates/schedules/weekly_template.html:42
 msgid "School"
 msgstr "学校"
 
@@ -1127,6 +1138,19 @@ msgstr "学校"
 #: templates/schoolyears/edit-schedule-main-calendar.html:10
 msgid "Schedule"
 msgstr "スケジュール"
+
+#: templates/home/index.html:55 templates/lessons/courses.html:27
+#: templates/lessons/flashcard-table.html:14
+#: templates/lessons/handouts-worksheets.html:47
+#: templates/lessons/target-language-table.html:13
+#: templates/lessons/view-activity-table.html:8
+#: templates/schedules/school-periods-period-view.html:25
+#: templates/schedules/sections_courses.html:79
+#: templates/schedules/view_schedule.html:314
+#: templates/schedules/view_section.html:50
+#: templates/schedules/view_section.html:117
+msgid "Actions"
+msgstr "行動"
 
 #: templates/home/login.html:17
 msgid "Please login using with the credentials provided by the administrator."
@@ -1231,11 +1255,13 @@ msgstr "弁償"
 #: templates/schedules/schedule_manager.html:23
 #: templates/schedules/school_periods.html:38
 #: templates/schedules/sections_courses.html:24
+#: templates/schedules/weekly_template.html:23
 msgid "School Year"
 msgstr "学年"
 
 #: templates/home/reimbursements.html:40
 #: templates/schedules/schedule_manager.html:50
+#: templates/schedules/weekly_template.html:50
 msgid "Month"
 msgstr "月"
 
@@ -1336,7 +1362,7 @@ msgstr "話題を追加"
 #: templates/lessons/target-language-table.html:75
 #: templates/lessons/view-activity-table.html:60
 #: templates/lessons/view_activity.html:27
-#: templates/schedules/view_schedule.html:330
+#: templates/schedules/view_schedule.html:386
 #: templates/schedules/view_section.html:157
 #: templates/schoolyears/school-year-information.html:10
 msgid "Edit"
@@ -1358,18 +1384,6 @@ msgstr "本:"
 #: templates/lessons/courses.html:26
 msgid "Lesson Title"
 msgstr "表題"
-
-#: templates/lessons/courses.html:27 templates/lessons/flashcard-table.html:14
-#: templates/lessons/handouts-worksheets.html:47
-#: templates/lessons/target-language-table.html:13
-#: templates/lessons/view-activity-table.html:8
-#: templates/schedules/school-periods-period-view.html:25
-#: templates/schedules/sections_courses.html:79
-#: templates/schedules/view_schedule.html:258
-#: templates/schedules/view_section.html:50
-#: templates/schedules/view_section.html:117
-msgid "Actions"
-msgstr "行動"
 
 #: templates/lessons/courses.html:66
 msgid "Edit Activities"
@@ -1400,7 +1414,7 @@ msgstr "フラッシュカードを編集"
 #: templates/lessons/flashcard-table.html:67
 #: templates/lessons/handouts-worksheets.html:88
 #: templates/lessons/target-language-table.html:62
-#: templates/schedules/view_schedule.html:318
+#: templates/schedules/view_schedule.html:374
 #: templates/schedules/view_section.html:89
 #: templates/schedules/view_section.html:151
 msgid "Delete"
@@ -1666,7 +1680,7 @@ msgstr "授業計画を編集"
 
 #: templates/lessons/lesson-plan-information.html:40
 #: templates/schedules/view_schedule.html:28
-#: templates/schedules/view_schedule.html:295
+#: templates/schedules/view_schedule.html:351
 #: templates/schedules/view_section_period.html:59
 #: templates/schedules/view_section_period.html:71
 msgid "<span class='japanese-hour'></span>"
@@ -1724,6 +1738,7 @@ msgstr "活動の情報"
 
 #: templates/schedules/schedule_manager.html:62
 #: templates/schedules/view_schedule.html:7
+#: templates/schedules/weekly_template.html:62
 msgid "View Schedule"
 msgstr "時間割を管理"
 
@@ -1749,7 +1764,7 @@ msgid "End Time"
 msgstr "終了時刻"
 
 #: templates/schedules/school-periods-period-view.html:37
-#: templates/schedules/view_schedule.html:247
+#: templates/schedules/view_schedule.html:303
 msgid "Edit Period Profile"
 msgstr "日課表を編集"
 
@@ -1877,7 +1892,7 @@ msgstr "時間割"
 
 #: templates/schedules/view_schedule.html:84
 #: templates/schedules/view_schedule.html:173
-#: templates/schedules/view_schedule.html:255
+#: templates/schedules/view_schedule.html:311
 msgid "Section"
 msgstr "組"
 
@@ -1928,43 +1943,56 @@ msgid "Class Schedule"
 msgstr "時間割"
 
 #: templates/schedules/view_schedule.html:172
-#: templates/schedules/view_schedule.html:254
+#: templates/schedules/view_schedule.html:310
 msgid "Time Period"
 msgstr "時限"
 
 #: templates/schedules/view_schedule.html:201
+#: templates/schedules/view_schedule.html:234
 #, fuzzy
 #| msgid "Lesson Plans"
 msgid "Lesson Plan"
 msgstr "本の授業計画を管理"
 
-#: templates/schedules/view_schedule.html:238
+#: templates/schedules/view_schedule.html:224
+#, fuzzy
+#| msgid "Lesson Plans for "
+msgid "Edit Lesson Plans for "
+msgstr "<span class='hidden'></span>"
+
+#: templates/schedules/view_schedule.html:285
 #, fuzzy
 #| msgid "Add Class"
 msgid "Add All Classes"
 msgstr "授業を追加"
 
-#: templates/schedules/view_schedule.html:320
+#: templates/schedules/view_schedule.html:294
+#, fuzzy
+#| msgid "Edit Lesson Plan"
+msgid "Edit Lesson Plans"
+msgstr "授業計画を編集"
+
+#: templates/schedules/view_schedule.html:376
 msgid "Edit Class"
 msgstr "授業を編集"
 
-#: templates/schedules/view_schedule.html:336
-#: templates/schedules/view_schedule.html:341
+#: templates/schedules/view_schedule.html:392
+#: templates/schedules/view_schedule.html:397
 msgid "No class scheduled."
 msgstr "授業の予定が入っていません"
 
-#: templates/schedules/view_schedule.html:346
-#: templates/schedules/view_schedule.html:352
+#: templates/schedules/view_schedule.html:402
+#: templates/schedules/view_schedule.html:408
 msgid "Add Class"
 msgstr "授業を追加"
 
-#: templates/schedules/view_schedule.html:364
+#: templates/schedules/view_schedule.html:420
 msgid ""
 "There are no classes scheduled for the school on this month. Would you like "
 "to"
 msgstr "今月はこの学校で予定入っていません。"
 
-#: templates/schedules/view_schedule.html:364
+#: templates/schedules/view_schedule.html:420
 msgid "schedule a new class day"
 msgstr "予定を追加しましょうか？"
 

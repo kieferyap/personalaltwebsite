@@ -41,11 +41,18 @@ def schedule_render_page(request,
         IS_SELECTED: False,
         MODAL_ID: None,
     }
+    weekly_template = {
+        NAME: NAME_WEEKLY_TEMPLATE,
+        URL: 'schedules/'+WEEKLY_TEMPLATE,
+        IS_SELECTED: False,
+        MODAL_ID: None,
+    }
 
     sidebar = OrderedDict()
     sidebar[SCHEDULE_MANAGER] = schedule_manager
     sidebar[SECTIONS_COURSES] = sections_courses
     sidebar[SCHOOL_PERIODS] = school_periods
+    sidebar[WEEKLY_TEMPLATE] = weekly_template
     sidebar[selected_sidebar][IS_SELECTED] = True
 
     return render_page(request,
@@ -435,6 +442,14 @@ def sections_courses(request, school_id=None):
         page=SECTIONS_COURSES,
         context=context,
         selected_sidebar=SECTIONS_COURSES)
+
+def weekly_template(request):
+    context = {}
+    context['all_school_years'] = SchoolYear.objects.get_school_years_and_schools()
+    return schedule_render_page(request,
+                       page=WEEKLY_TEMPLATE,
+                       context=context,
+                       selected_sidebar=WEEKLY_TEMPLATE)
 
 def view_section_activities(request, section_id=None):
     context = {}
