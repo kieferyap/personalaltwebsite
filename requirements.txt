@@ -2,7 +2,7 @@ Django==1.11.20
 waitress
 gunicorn
 setuptools
-django-bootstrap3
+django-bootstrap3==12.1.0
 reportlab
 psycopg2
 boto3
