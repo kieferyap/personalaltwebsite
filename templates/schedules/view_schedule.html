@@ -268,14 +268,18 @@
 			{% endif %}
 		</div>
 		<div class="row">
-			<div class="col-sm-6 page-subheader-left">
+			<div class="col-sm-5 page-subheader-left">
 				{{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:" (D)" }}
 				<span class="default-profile-marker set-data-color" data-color="#{{ schedule.periods.school_period_type.get_period_type_color }}">
 					{{ schedule.periods.school_period_type.period_name }}
 				</span>
 			</div>
-			<div class="col-sm-6 page-subheader-right">
+			<div class="col-sm-7 page-subheader-right">
 				{% if schedule.periods.is_day_empty %}
+				<button class="btn btn-tertiary ajax-button add-from-template"
+							data-url="/schedules/add_from_template/{{ schedule.periods.section_period_type.id }}">
+					{{ glyphicon_plus }} {% trans "Add From Template" %}
+				</button>
 				<button 
 					type="button" 
 					class="btn btn-secondary"

@@ -768,3 +768,49 @@ def delete_template_class(request, template_section_period_id):
     messages.success(request, MSG_DELETE_CLASS)
     return JsonResponse({'is_success': True, 'messages': None})
 
+
+def add_from_template(request, section_period_type_id):
+    section_period_type = get_object_or_404(SectionPeriodType, pk=int(section_period_type_id))
+    section_period_date = section_period_type.date
+    weekday = section_period_date.weekday()
+    school = section_period_type.school
+
+    template_period_type = TemplatePeriodType.objects.filter(weekday=weekday, school=school).first()
+    school_periods = SchoolPeriod.objects.filter(school_period_type=template_period_type.school_period_type)
+
+    for school_period in school_periods:
+        template_section_period = TemplateSectionPeriod.objects.filter(school_period=school_period).first()
+
+        lesson_plan = LessonPlan(
+            lesson=None,
+            hour_number=None,
+            greeting=None,
+            warmup=None,
+            presentation=None,
+            practice=None,
+            production=None,
+            cooldown=None,
+            assessment=None,
+            is_premade_lesson_plan=False,
+        )
+        lesson_plan.save()
+
+        if template_section_period is not None:
+            new_section_period = SectionPeriod(
+                date=section_period_date,
+                section=template_section_period.section,
+                school_period=school_period,
+                lesson_plan=lesson_plan,
+                lesson_number=1,
+                hour_number=1,
+                notes='',
+            )
+            new_section_period.save()
+        print(school_period, template_section_period)
+
+    # From the Section Period Type, check if it is a Monday.
+    # If it is not, only add classes from the template from the same day.
+    # Else, add it for the next five days.
+    # Note that when adding a new class for the entire week, we'll need to check for the last lesson, and then use the next lesson plan for it.
+    # The entire process may take more than 30 seconds for an entire week, so maaaaaybe we should just do it for one day first.
+    return JsonResponse({'is_success': True, 'messages': None})
