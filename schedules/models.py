@@ -127,7 +127,7 @@ class Section(models.Model):
 
     def __str__(self):
         return " | ".join([self.school_section.school.name,
-                           self.section_name,
+                           str(self.school_section.year_level)+'-'+self.section_name,
                            self.teacher_name])
 
 class SectionPeriod(models.Model):

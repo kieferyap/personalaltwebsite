@@ -367,6 +367,14 @@ def edit_schedule_period_profile(request):
     return JsonResponse({'is_success': True, 'messages': None})
 
 @require_POST
+def edit_template_period_profile(request):
+    template_period_type = get_object_or_404(TemplatePeriodType, pk=int(request.POST['id']))
+    school_period_type = get_object_or_404(SchoolPeriodType, pk=int(request.POST['school_period_type']))
+    template_period_type.school_period_type = school_period_type
+    template_period_type.save()
+    return JsonResponse({'is_success': True, 'messages': None})
+
+@require_POST
 def edit_lesson_plans(request):
     date = request.POST['date']
     lesson_plan_id = request.POST['lesson-plan-id']
@@ -731,3 +739,32 @@ def get_last_period(request):
         return JsonResponse({'is_success': True, 'messages': {'lesson': last_hour.lesson_number, 'hour': last_hour.hour_number, 'date': last_hour.date}})
     else:
         return JsonResponse({'is_success': True, 'messages': {'lesson': 0, 'hour': 0, 'date': None}})
+
+@require_POST
+def add_template_class(request):
+    school_period = get_object_or_404(SchoolPeriod, pk=int(request.POST['school_period_id']))
+    section = get_object_or_404(Section, pk=int(request.POST['section']))
+
+    new_template_section_period = TemplateSectionPeriod(
+        school_period=school_period,
+        section=section
+    )
+    new_template_section_period.save()
+
+    return JsonResponse({'is_success': True, 'messages': 'The class has been successfully added to the template'})
+
+
+@require_POST
+def edit_template_class(request):
+    template_section_period = get_object_or_404(TemplateSectionPeriod, pk=int(request.POST['template_section_period_id']))
+    template_section_period.section = get_object_or_404(Section, pk=int(request.POST['section_id']))
+    template_section_period.save()
+    return JsonResponse({'is_success': True, 'messages': 'The class has been successfully edited.'})
+
+@require_POST
+def delete_template_class(request, template_section_period_id):
+    template_section_period = get_object_or_404(TemplateSectionPeriod, pk=int(template_section_period_id))
+    template_section_period.delete()
+    messages.success(request, MSG_DELETE_CLASS)
+    return JsonResponse({'is_success': True, 'messages': None})
+

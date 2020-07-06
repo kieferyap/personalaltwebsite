@@ -25,7 +25,7 @@
 		<modal-content id="add-class">
 			<modal-head>
 				<div class="modal-title">
-					Add Class
+					{% trans "Add class" %}
 				</div>
 			</modal-head>
 
@@ -36,6 +36,39 @@
 				<div class="form-group">
 					<label class="control-label">{% trans "Section" %}</label>
 					<select name="section" 
+						required="" 
+						class="form-control"
+						title="">
+						<option value="0">N/A</option>
+						{% for section in all_sections %}
+						<option value="{{ section.id }}">
+							{% if section.school_section__is_special_needs %}{% trans "Special Needs" %}{% else %}{{ section.school_section__year_level }}{% endif %}-{{ section.section_name }} 
+						</option>
+						{% endfor %}
+					</select>
+				</div>
+			</modal-body>
+
+			<modal-footer>
+				
+			</modal-footer>
+			</form>
+		</modal-content>
+		<modal-content id="edit-class">
+			<modal-head>
+				<div class="modal-title">
+					{% trans "Edit class" %}
+				</div>
+			</modal-head>
+
+			<form class="modal-form" id="edit-class-modal-form" action="/schedules/edit_template_class" method="POST">				
+			<modal-body>
+				{% csrf_token %}
+				<input type="hidden" id="edit-template-section-period-id" name="template_section_period_id" value="0"/>
+				<div class="form-group">
+					<label class="control-label">{% trans "Section" %}</label>
+					<select id="edit-template-section-select"
+						name="section_id" 
 						required="" 
 						class="form-control"
 						title="">
@@ -68,6 +101,29 @@
 	</div>
 
 	{% for day in all_days %}
+	<div class="hidden remove-me">
+		<modal-content id="edit-period-type-{{ day.template_period_type.id }}">
+			<modal-head>
+				{% trans "Edit Period Profile for" %} {{ day.weekday_name }}
+			</modal-head>
+
+			<form class="modal-form" action="/schedules/edit_template_period_profile"  method="POST">
+			<modal-body>
+				<div class="alert alert-warning">
+					<strong>Warning:</strong> {% trans "Once the period profile has changed, the times will change as well, so all the old classes that were entered for the day will be deleted." %}
+				</div>
+				<br/>
+				{% csrf_token %}
+				<input type="hidden" name="id" value="{{ day.template_period_type.id }}"/>
+				{% bootstrap_field day.edit_form.school_period_type %}
+			</modal-body>
+
+			<modal-footer>
+				
+			</modal-footer>
+			</form>
+		</modal-content>
+	</div>
 	<div class="row">
 		<div class="col-sm-6 page-subheader-left">
 			{{ day.weekday_name }}			
@@ -78,18 +134,9 @@
 		<div class="col-sm-6 page-subheader-right">
 			<button 
 				type="button" 
-				class="btn btn-secondary"
-				data-toggle="modal" 
-				data-target="#add-all-classes-0"
-				name="add-all-classes-button">
-					{{ glyphicon_edit }} {% trans "Edit Classes" %}
-			</button>
-			<!--{{ schedule.periods.section_period_type.id }}-->
-			<button 
-				type="button" 
 				class="btn btn-primary"
 				data-toggle="modal" 
-				data-target="#edit-period-type-0" 
+				data-target="#edit-period-type-{{ day.template_period_type.id }}" 
 				name="edit-period-profile-entry-button">
 					{{ glyphicon_edit }} {% trans "Edit Period Profile" %}
 			</button>
@@ -109,11 +156,11 @@
 					<strong>{{ period.period_number }}</strong> 
 					<p class="hidden-xs">({{ period.start_time|time:'H:i' }} ~ {{ period.end_time|time:'H:i' }})</p>
 				</td>
-				{% if day.period.section_info %}
+				{% if period.section_info %}
 				<td>
-					{% with period.section_info.school_section.is_special_needs as is_special_needs %}
-					{% with period.section_info.school_section.year_level as year_level %}
-					{% with period.section_info.section_name as section_name %}
+					{% with period.section_info.section.school_section.is_special_needs as is_special_needs %}
+					{% with period.section_info.section.school_section.year_level as year_level %}
+					{% with period.section_info.section.section_name as section_name %}
 						{% include "section-name-base.html" %}
 					{% endwith %}
 					{% endwith %}
@@ -125,6 +172,18 @@
 					{% else %}
 						<i>N/A</i>
 					{% endif %}
+				</td>
+				<td class="page-subheader-right">
+					<button class="btn btn-tertiary ajax-button delete-class-button"
+							data-url="/schedules/delete_template_class/{{ period.section_info.id }}">{% bootstrap_icon "trash" %} {% trans "Delete" %}</button>
+					<button class="btn btn-secondary edit-class-button"
+						data-title="{% trans 'Edit Class' %}"
+						data-template-section-period-id="{{ period.section_info.id }}"
+						data-section="{{ period.section_info.section.id }}"
+						data-toggle="modal" 
+						data-target="#edit-class">
+						{{ glyphicon_edit }} {% trans "Edit" %}
+					</button>
 				</td>
 				{% else %}
 				<td colspan="2" class="hidden-xs">
@@ -142,7 +201,7 @@
 						data-title="{% trans 'Add Class' %}"
 						data-school-period-id="{{ period.id }}"
 						data-toggle="modal" 
-						data-target="#add-class"
+						data-target="#add-class">
 						{{ glyphicon_plus }} {% trans "Add Class" %}
 					</button>
 				</td>
@@ -152,386 +211,4 @@
 		</table>
 	</div>
 	{% endfor %}
-	<hr/>
-
-	<div class="row">
-		<div class="col-sm-6 page-subheader-left">
-			Monday
-			<!-- <span class="default-profile-marker set-data-color" data-color="#{{ schedule.periods.school_period_type.get_period_type_color }}">
-				{{ schedule.periods.school_period_type.period_name }}
-			</span> -->
-		</div>
-		
-	</div>
-
-
-	
-			{% for period in schedule.periods.school_periods %}
-			<tr>
-				<td>
-					<strong>{{ period.period_number }}</strong> 
-					<p class="hidden-xs">({{ period.start_time|time:'H:i' }} ~ {{ period.end_time|time:'H:i' }})</p>
-				</td>
-				{% if period.class_info %}
-				<td>
-					<a href="/schedules/view_section/{{ period.class_info.section.school_section.id }}">
-					{% with period.class_info.section.school_section.is_special_needs as is_special_needs %}
-					{% with period.class_info.section.school_section.year_level as year_level %}
-					{% with period.class_info.section.section_name as section_name %}
-						{% include "section-name-base.html" %}
-					{% endwith %}
-					{% endwith %}
-					{% endwith %}
-					</a>
-				</td>
-				<td class="hidden-xs">
-					{% if period.class_info.section.teacher_name %}
-						{{ period.class_info.section.teacher_name }}
-					{% else %}
-						<i>N/A</i>
-					{% endif %}
-				</td>
-				<td class="same-as date-{{ schedule.date|date:'m-d' }} year-level-{{ period.class_info.section.school_section.year_level }}" 
-					data-lesson-plan-id="{{ period.class_info.lesson_plan.id }}"
-					data-year-level='{% with period.class_info.section.school_section.is_special_needs as is_special_needs %}
-					{% with period.class_info.section.school_section.year_level as year_level %}
-					{% with period.class_info.section.section_name as section_name %}
-						{% include "section-name-base.html" %}
-					{% endwith %}
-					{% endwith %}
-					{% endwith %}'>
-					<span class="lesson-plan-text">
-						{% trans "Lesson" %} {{ period.class_info.lesson_number }}, {% trans "Hour" %} {{ period.class_info.hour_number }} {% trans "<span class='japanese-hour'></span>" %}
-					</span>
-					{% if period.class_info.lesson_plan.lesson %}
-						({{ period.class_info.lesson_plan.lesson.course.course_name }})
-					{% endif %}
-					{% if period.class_info.lesson_plan.topic %}
-						({{ period.class_info.lesson_plan.topic }})
-					{% endif %}
-					<a href="/schedules/view_section_period/{{ period.class_info.id }}">
-						<button class="btn btn-tertiary btn-sm btn-smaller">
-							{{ glyphicon_info_sign }}
-						</button>
-					</a><br/>
-					<div class="small">
-						{% if period.class_info.notes %}
-							<i>
-								{% trans "Notes" %}: {{ period.class_info.notes }}
-							</i>
-						{% endif %}
-					</div>
-				</td>
-				<td class="page-subheader-right">
-					<button class="btn btn-tertiary ajax-button delete-class-button"
-						data-url="/schedules/delete_class/{{ period.class_info.id }}">{% bootstrap_icon "trash" %} {% trans "Delete" %}</button>
-					<button class="btn btn-secondary edit-class-button"
-						data-title="{% trans 'Edit Class' %}"
-						data-date="{{ schedule.date|date:'Y-m-d' }}"
-						data-section-period-id="{{ period.class_info.id }}"
-						data-school-section-id="{{ period.class_info.section.school_section.id }}"
-						data-section-id="{{ period.class_info.section.id }}"
-						data-lesson-plan-id="{{ period.class_info.lesson_plan.id }}" 
-						data-notes='{% if period.class_info.notes %}{{ period.class_info.notes }}{% endif %}'
-						data-toggle="modal"
-						data-date-class="date-{{ schedule.date|date:'m-d' }}"
-						data-target="#add-class">
-						{{ glyphicon_edit }} {% trans "Edit" %}
-					</button>
-				</td>
-				{% else %}
-				<td colspan="3" class="hidden-xs">
-					<div class="center-align">
-						<i>{% trans "No class scheduled." %}</i>
-					</div>
-				</td>
-				<td colspan="2" class="visible-xs">
-					<div class="center-align">
-						<i>{% trans "No class scheduled." %}</i>
-					</div>
-				</td>
-				<td class="page-subheader-right">
-					<button class="btn btn-secondary add-class-button"
-						data-title="{% trans 'Add Class' %}"
-						data-school-period-id="{{ period.id }}"
-						data-date="{{ schedule.date|date:'Y-m-d' }}"
-						data-toggle="modal" 
-						data-target="#add-class"
-						data-date-class="date-{{ schedule.date|date:'m-d' }}">
-						{{ glyphicon_plus }} {% trans "Add Class" %}
-					</button>
-				</td>
-				{% endif %}
-			</tr>
-			{% endfor %}
-		</table>
-	</div>
-
-	{% if all_schedules %}
-		<div class="hidden remove-me">
-			<modal-content id="add-class">
-				<modal-head>
-					<div id="modal-title">
-					</div>
-				</modal-head>
-
-				<form class="modal-form" id="add-class-modal-form" action="/schedules/add_class" method="POST">				
-				<modal-body>
-					{% csrf_token %}
-					<input type="hidden" id="add-class-school-period-id" name="school_period_id" value="0"/>
-					<input type="hidden" id="add-class-section-period-id" name="section_period_id" value="0"/>
-					<input type="hidden" id="add-class-date" name="date" value="0"/>
-					<input type="hidden" id="same-as-date-class-information" value=""/>
-
-					<div class="form-group">
-						<label class="control-label">{% trans "Year Level" %}</label>
-						<select name="year_level" required="" class="form-control" id="id_year_level" title="">
-							{% for year_level in all_year_levels %}
-							<option value="{{ year_level.id }}" 
-								data-year-level="{{ year_level.year_level }}"
-								data-sections="{{ year_level.sections }}"
-								data-lesson-plans="{{ year_level.lesson_plans }}">
-									{% if year_level.is_special_needs %}
-										{% trans "Special Needs" %}
-									{% else %}
-										{{ year_level.year_level }}
-									{% endif %}
-							</option>
-							{% endfor %}
-						</select>
-					</div>
-
-					<div class="form-group" id="section-form-group">
-						<label class="control-label">{% trans "Section" %}</label>
-						<select name="section" required="" class="form-control" id="id_section" disabled="disabled">
-							<option value="0">{% trans "There are no sections available for the selected year level." %}</option>
-						</select>
-					</div>
-
-					<div class="form-group" id="lesson-plan-form-group">
-						<label class="control-label">{% trans "Pre-made Lesson Plan" %}</label>
-						<select name="lesson_plan" class="form-control" id="id_lesson_plan" disabled="disabled">
-							<option value="0">{% trans "There are no pre-made lesson plans available for the selected year level." %}</option>
-						</select>
-					</div>
-
-					<div class="form-group">
-						<label class="control-label" for="id_notes">
-							{% trans "Notes (Optional)" %}
-						</label>
-						<input type="text" 
-							name="notes" 
-							value="" 
-							class="form-control"
-							placeholder='{% trans "Bring additional flashcards" %}'
-							title="" 
-							id="id_notes">
-					</div>
-
-					<div class="form-group" id="lesson-plan-form-group">
-						<label class="control-label">{% trans "Last Lesson Held" %}</label>
-						<div class="row">
-							<div class="col-xs-12">
-								<p id="last-period">
-									<i>N/A</i>
-								</p>
-							</div>
-						</div>
-						<input type="hidden" id="last-period-url" data-url="/schedules/get_last_period"/>
-					</div>
-				</modal-body>
-
-				<modal-footer>
-					
-				</modal-footer>
-				</form>
-			</modal-content>
-		</div>
-		{% for schedule in all_schedules %}
-		<div class="hidden remove-me">
-			<modal-content id="edit-period-type-{{ schedule.periods.section_period_type.id }}">
-				<modal-head>
-					{% trans "Edit Period Profile for" %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:" (D)" }}
-				</modal-head>
-
-				<form class="modal-form" action="/schedules/edit_schedule_period_profile"  method="POST">
-				<modal-body>
-					<div class="alert alert-warning">
-						<strong>Warning:</strong> {% trans "Once the period profile has changed, the times will change as well, so all the old classes that were entered for the day will be deleted." %}
-					</div>
-					<br/>
-					{% csrf_token %}
-					<input type="hidden" name="id" value="{{ schedule.periods.section_period_type.id }}"/>
-					{% bootstrap_field schedule.periods.section_period_type.edit_form.school_period_type %}
-				</modal-body>
-
-				<modal-footer>
-					
-				</modal-footer>
-				</form>
-			</modal-content>
-			{% if schedule.periods.is_day_empty %}
-			<modal-content id="add-all-classes-{{ schedule.periods.section_period_type.id }}">
-				<modal-head>
-					{% trans "Add All Classes, Same Lesson Plan for" %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:" (D)" }}
-				</modal-head>
-
-				<form class="modal-form" action="/schedules/add_all_classes"  method="POST">
-				<modal-body>
-					{% csrf_token %}
-					<input type="hidden" name="id" value="{{ schedule.periods.section_period_type.id }}"/>
-					<input type="hidden" name="period-count" value="{{ schedule.periods.school_periods.count }}"/>
-					<input type="hidden" name="date" value='{{ schedule.date|date:"Y-m-d" }}'/>
-
-					<div class="form-group">
-						<label class="control-label" for="id_school_period_type">
-							{% trans "Class Schedule" %}
-						</label>
-					</div>
-					<table class="table table-hover padding-5 margin-top-5">
-					<tr>
-						<th class="col-xs-3">{% trans "Time Period" %}</th>
-						<th class="col-xs-9">{% trans "Section" %}</th>	
-					</tr>
-					{% for period in schedule.periods.school_periods %}
-					<tr>
-						<td>
-							<strong>
-								{{ period.period_number }}
-								<input type="hidden" name="period-{{ period.period_number }}" value="{{ period.id }}"/>
-							</strong> 
-						</td>
-						<td>
-							<select name="section-{{ period.period_number }}" 
-								required="" 
-								class="form-control"
-								title="">
-								<option value="0">N/A</option>
-								{% for section in all_sections %}
-								<option value="{{ section.id }}">
-									{% if section.school_section__is_special_needs %}{% trans "Special Needs" %}{% else %}{{ section.school_section__year_level }}{% endif %}-{{ section.section_name }} 
-								</option>
-								{% endfor %}
-							</select>
-						</td>
-					</tr>
-					{% endfor %}
-					</table>
-					<div class="form-group">
-						<label class="control-label" for="id_school_period_type">
-							{% trans "Lesson Plan" %}
-						</label>
-						<select class="form-control"
-							name="lesson-plan-id"
-							required="">
-							<option value="0">N/A</option>
-							{% for lesson_plan in all_lesson_plans %}
-							<option value="{{ lesson_plan.id }}">
-								{{ lesson_plan }}
-							</option>
-							{% endfor %}
-						</select>
-					</div>
-				</modal-body>
-
-				<modal-footer>
-					
-				</modal-footer>
-				</form>
-			</modal-content>
-			{% else %}
-			<modal-content id="edit-lesson-plans-{{ schedule.periods.section_period_type.id }}">
-				<modal-head>
-					{% trans "Edit Lesson Plans for " %} {{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:" (D)" }}
-				</modal-head>
-
-				<form class="modal-form" action="/schedules/edit_lesson_plans"  method="POST">
-				<modal-body>
-					This sets one lesson plan to use for all classes.<br/>
-					{% csrf_token %}
-					<input type="hidden" name="date" value='{{ schedule.date|date:"Y-m-d" }}'/>
-					<div class="form-group">
-						<label class="control-label">
-							{% trans "Lesson Plan" %}
-						</label>
-						<select class="form-control"
-							name="lesson-plan-id"
-							required="">
-							<option value="0">N/A</option>
-							{% for lesson_plan in all_lesson_plans %}
-							<option value="{{ lesson_plan.id }}">
-								{{ lesson_plan }}
-							</option>
-							{% endfor %}
-							{% for period in schedule.periods.school_periods %}
-								{% if period.class_info %}
-								<option value="{{ period.class_info.lesson_plan.id }}">
-									Same as 
-									{% with period.class_info.section.school_section.is_special_needs as is_special_needs %}
-									{% with period.class_info.section.school_section.year_level as year_level %}
-									{% with period.class_info.section.section_name as section_name %}
-										{% include "section-name-base.html" %}
-									{% endwith %}
-									{% endwith %}
-									{% endwith %}
-								</option>
-								{% endif %}
-							{% endfor %}
-						</select>
-					</div>
-				</modal-body>
-
-				<modal-footer>
-					
-				</modal-footer>
-				</form>
-			</modal-content>
-			{% endif %}
-		</div>
-		<div class="row">
-			<div class="col-sm-6 page-subheader-left">
-				{{ schedule.date|date:"F d" }}{% trans '<span class="japanese-day"></span>' %}{{ schedule.date|date:" (D)" }}
-				<span class="default-profile-marker set-data-color" data-color="#{{ schedule.periods.school_period_type.get_period_type_color }}">
-					{{ schedule.periods.school_period_type.period_name }}
-				</span>
-			</div>
-			<div class="col-sm-6 page-subheader-right">
-				{% if schedule.periods.is_day_empty %}
-				<button 
-					type="button" 
-					class="btn btn-secondary"
-					data-toggle="modal" 
-					data-target="#add-all-classes-{{ schedule.periods.section_period_type.id }}" 
-					name="add-all-classes-button">
-						{{ glyphicon_plus }} {% trans "Add All Classes" %}
-				</button>
-				{% else %}
-				<button 
-					type="button" 
-					class="btn btn-tertiary"
-					data-toggle="modal" 
-					data-target="#edit-lesson-plans-{{ schedule.periods.section_period_type.id }}" 
-					name="edit-lesson-plans-button">
-						{{ glyphicon_edit }} {% trans "Edit Lesson Plans" %}
-				</button>
-				{% endif %}
-				<button 
-					type="button" 
-					class="btn btn-primary"
-					data-toggle="modal" 
-					data-target="#edit-period-type-{{ schedule.periods.section_period_type.id }}" 
-					name="edit-period-profile-entry-button">
-						{{ glyphicon_edit }} {% trans "Edit Period Profile" %}
-				</button>
-			</div>
-		</div>
-		
-		{% endfor %}
-	{% else %}
-		<div class="row">
-			<div class="col-sm-12 center-align">
-				{% trans 'There are no classes scheduled for the school on this month. Would you like to' %} <a class="cursor-pointer" href="/schoolyears/edit_schedule/{{ school.school_year.id }}">{% trans 'schedule a new class day' %}</a>?
-			</div>
-		</div>
-	{% endif %}
 {% endblock content %}

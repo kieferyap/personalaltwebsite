@@ -340,15 +340,19 @@ class TemplatePeriodTypeManager(models.Manager):
 
         school_periods = school_period_model.objects.filter(school_period_type=template_period_type.school_period_type).order_by('period_number')
 
+        edit_form = SchoolPeriodTypeManager.get_section_period_type_form(self, instance=template_period_type.school_period_type, school=school)
+
         for period in school_periods:
             template_section_period_model = apps.get_model(app_label='schedules', model_name='TemplateSectionPeriod')
             template_section = template_section_period_model.objects.filter(school_period=period).first()
+            period.section_info = None
             if template_section is not None:
-                period.section_info = template_section.section
+                period.section_info = template_section
 
-        # edit_form = self.get_school_period_type_form(instance=school_period_type)
+        
         return {
             'template_period_type': template_period_type, 
             'school_periods': school_periods,
-            'weekday_name': ALL_WEEKDAYS[day]
+            'weekday_name': ALL_WEEKDAYS[day],
+            'edit_form': edit_form
         }  
