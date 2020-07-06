@@ -13,7 +13,7 @@ from paw.methods import render_page, school_year_required, get_value_of_optional
 from schedules.forms import *
 from schedules.models import *
 from schedules.constants import *
-from schedules.managers import SchoolSectionManager
+from schedules.managers import SchoolSectionManager, TemplatePeriodTypeManager
 from schoolyears.models import SchoolYear, School, YearlySchedule
 
 
@@ -443,6 +443,7 @@ def sections_courses(request, school_id=None):
         context=context,
         selected_sidebar=SECTIONS_COURSES)
 
+@school_year_required
 def weekly_template(request):
     context = {}
     context['all_school_years'] = SchoolYear.objects.get_school_years_and_schools()
@@ -450,6 +451,29 @@ def weekly_template(request):
                        page=WEEKLY_TEMPLATE,
                        context=context,
                        selected_sidebar=WEEKLY_TEMPLATE)
+
+def view_template(request, school_year_id=None, school_id=None):
+    if school_year_id is not None and school_id is not None:
+        context = {}
+        school_year = get_object_or_404(SchoolYear, pk=school_year_id)
+        school = get_object_or_404(School, pk=school_id)
+
+        templates = []
+        for weekday in range(0,5):
+            templates.append(TemplatePeriodTypeManager().get_template_info(school, weekday))
+
+        context['all_sections'] = SchoolSectionManager().get_sections(school)
+        context['school'] = school
+        context['all_days'] = templates
+        context['all_classes'] = SectionPeriod.objects.get_year_level_dropdown(school) 
+
+        return schedule_render_page(request,
+                           page=VIEW_TEMPLATE,
+                           context=context,
+                           selected_sidebar=WEEKLY_TEMPLATE)
+    else:
+        messages.error(request, MSG_ERR_SCHEDULE_INCOMPLETE)
+        return redirect('/schedules/schedule_manager')
 
 def view_section_activities(request, section_id=None):
     context = {}

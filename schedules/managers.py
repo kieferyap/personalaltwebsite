@@ -46,6 +46,7 @@ class SchoolPeriodTypeManager(models.Manager):
         school_periods = school_period_model.objects.filter(school_period_type=school_period_type).order_by('period_number')
         section_period_type.edit_form = self.get_section_period_type_form(instance=section_period_type, school=school)
 
+
         return {
             'school_period_type': school_period_type, 
             'school_periods': school_periods,
@@ -68,8 +69,8 @@ class SchoolPeriodTypeManager(models.Manager):
             'school_periods': class_info['school_periods'],
             'section_period_type': class_info['section_period_type'],
             'is_day_empty': is_day_empty
-        }    
-    
+        }
+
     def get_section_period_type_form(self, instance, school):
         from schedules.forms import SectionPeriodTypeForm
         return SectionPeriodTypeForm(instance=instance, school=school)
@@ -313,3 +314,41 @@ class SectionPeriodManager(models.Manager):
             return period.latest('date')
         else:
             return None
+
+class TemplatePeriodTypeManager(models.Manager):
+    def get_template_info(self, school, day): # day 0 = Monday, day 4 = Friday
+        template_period_type_model = apps.get_model(app_label='schedules', model_name='TemplatePeriodType')
+        school_period_model = apps.get_model(app_label='schedules', model_name='SchoolPeriod')
+        template_period_type = template_period_type_model.objects.filter(weekday=day, school=school).first()
+
+        if template_period_type is None:
+            period_type = PERIOD_TYPE_NORMAL
+            if day == 0:
+                period_type = PERIOD_TYPE_MONDAY
+            elif day == 2:
+                period_type = PERIOD_TYPE_WEDNESDAY
+            school_period_type_model = apps.get_model(app_label='schedules', model_name='SchoolPeriodType')
+            school_period_type = school_period_type_model.objects.filter(school=school, period_type=period_type).first()
+
+            new_period_type = template_period_type_model(
+                weekday=day,
+                school=school,
+                school_period_type=school_period_type
+            )
+            new_period_type.save()
+            template_period_type = new_period_type
+
+        school_periods = school_period_model.objects.filter(school_period_type=template_period_type.school_period_type).order_by('period_number')
+
+        for period in school_periods:
+            template_section_period_model = apps.get_model(app_label='schedules', model_name='TemplateSectionPeriod')
+            template_section = template_section_period_model.objects.filter(school_period=period).first()
+            if template_section is not None:
+                period.section_info = template_section.section
+
+        # edit_form = self.get_school_period_type_form(instance=school_period_type)
+        return {
+            'template_period_type': template_period_type, 
+            'school_periods': school_periods,
+            'weekday_name': ALL_WEEKDAYS[day]
+        }  

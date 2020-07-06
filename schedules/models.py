@@ -163,6 +163,8 @@ class TemplateSectionPeriod(models.Model):
 class TemplatePeriodType(models.Model):
     weekday = models.SmallIntegerField()
     school_period_type = models.ForeignKey(SchoolPeriodType)
+    school = models.ForeignKey('schoolyears.School', default=None)
+    objects = TemplatePeriodTypeManager()
 
     def __str__(self):
         weekday_text = 'Monday'

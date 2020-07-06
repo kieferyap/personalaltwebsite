@@ -12,6 +12,7 @@ VIEW_SECTION = 'view_section'
 DELETE_CLASS = 'delete_class'
 REASSIGN_BOOK = 'reassign_book'
 VIEW_SCHEDULE = 'view_schedule'
+VIEW_TEMPLATE = 'view_template'
 DELETE_PERIOD = 'delete_period'
 UPDATE_COURSE = 'update_course'
 UPDATE_SECTION = 'update_section'
@@ -72,6 +73,7 @@ EXPRESSION_SCHOOL_PERIOD_SCHOOL_ID = r'^'+SCHOOL_PERIODS+'/(?P<school_id>[0-9]+)
 EXPRESSION_SECTIONS_COURSES_SCHOOL_ID = r'^'+SECTIONS_COURSES+'/(?P<school_id>[0-9]+)$'
 EXPRESSION_VIEW_SECTION_PERIOD = r'^'+VIEW_SECTION_PERIOD+'/(?P<section_period_id>[0-9]+)$'
 EXPRESSION_VIEW_SCHEDULE = r'^'+VIEW_SCHEDULE+'/(?P<school_year_id>[0-9]+)/(?P<school_id>[0-9]+)/(?P<year>[0-9]+)/(?P<month>[0-9]+)$'
+EXPRESSION_VIEW_TEMPLATE = r'^'+VIEW_TEMPLATE+'/(?P<school_year_id>[0-9]+)/(?P<school_id>[0-9]+)$'
 
 PERIOD_TYPE_TEXT = _('This schedule type is used on:')
 NAME_PERIOD = _('Period Name')
@@ -207,3 +209,13 @@ ALL_SCHOOL_PERIODS[HIGH_SCHOOL] = [{
         {'number': 6, 'start': '14:30', 'end': '15:20'},
     ], 
 }]
+
+ALL_WEEKDAYS = [
+    'Monday (月曜日)',
+    'Tuesday (火曜日)',
+    'Wednesday (水曜日)',
+    'Thursday (木曜日)',
+    'Friday (金曜日)',
+    'Saturday (土曜日)',
+    'Sunday (日曜日)',
+]
