@@ -781,7 +781,7 @@ def add_from_template(request, section_period_type_id):
     are_classes_empty = True
 
     for school_period in school_periods:
-        template_section_period = TemplateSectionPeriod.objects.filter(school_period=school_period).first()
+        template_section_period = TemplateSectionPeriod.objects.filter(weekday=weekday, school_period=school_period).first()
         next_lesson_plan = None
         next_lesson_number = 1
         next_hour_number = 1
