@@ -344,7 +344,7 @@ class TemplatePeriodTypeManager(models.Manager):
 
         for period in school_periods:
             template_section_period_model = apps.get_model(app_label='schedules', model_name='TemplateSectionPeriod')
-            template_section = template_section_period_model.objects.filter(school_period=period).first()
+            template_section = template_section_period_model.objects.filter(weekday=day, school_period=period).first()
             period.section_info = None
             if template_section is not None:
                 period.section_info = template_section

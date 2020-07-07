@@ -154,6 +154,7 @@ class SectionPeriodType(models.Model):
         return " | ".join([str(self.date), self.school_period_type.period_name])
 
 class TemplateSectionPeriod(models.Model):
+    weekday = models.SmallIntegerField(default=0)
     school_period = models.ForeignKey(SchoolPeriod)
     section = models.ForeignKey(Section)
 

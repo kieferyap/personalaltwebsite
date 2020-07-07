@@ -3,6 +3,7 @@ var WEEKLY_SCHEDULE = WEEKLY_SCHEDULE || {};
 WEEKLY_SCHEDULE.clickAddButton = function(e) {
 	var $this = $(e.target);
 	$('#add-class-school-period-id').val($this.data('school-period-id'));
+	$('#weekday-number').val($this.data('weekday'));
 };
 
 WEEKLY_SCHEDULE.clickEditButton = function(e) {

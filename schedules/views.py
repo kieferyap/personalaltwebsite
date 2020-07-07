@@ -742,11 +742,12 @@ def get_last_period(request):
 
 @require_POST
 def add_template_class(request):
-    print('>>>', request.POST['school_period_id'], '<<<')
+    weekday = int(request.POST['weekday'])
     school_period = get_object_or_404(SchoolPeriod, pk=int(request.POST['school_period_id']))
     section = get_object_or_404(Section, pk=int(request.POST['section']))
 
     new_template_section_period = TemplateSectionPeriod(
+        weekday=weekday,
         school_period=school_period,
         section=section
     )

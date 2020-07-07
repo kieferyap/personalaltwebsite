@@ -33,6 +33,7 @@
 			<modal-body>
 				{% csrf_token %}
 				<input type="hidden" id="add-class-school-period-id" name="school_period_id" value="0"/>
+				<input type="hidden" id="weekday-number" name="weekday" value="0"/>
 				<div class="form-group">
 					<label class="control-label">{% trans "Section" %}</label>
 					<select name="section" 
@@ -201,6 +202,7 @@
 						data-title="{% trans 'Add Class' %}"
 						data-school-period-id="{{ period.id }}"
 						data-toggle="modal" 
+						data-weekday="{{ day.template_period_type.weekday }}"
 						data-target="#add-class">
 						{{ glyphicon_plus }} {% trans "Add Class" %}
 					</button>
