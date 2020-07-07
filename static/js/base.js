@@ -105,6 +105,7 @@ BASE.removeDashedOption = function() {
 BASE.ajaxButtonClick = function(e) {
 	var $this = $(e.target),
 		post_url = $this.data('url');
+	$this.text('Loading...');
 	$.ajax({
 		url: post_url,
 		method: "POST",

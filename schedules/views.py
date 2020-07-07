@@ -742,6 +742,7 @@ def get_last_period(request):
 
 @require_POST
 def add_template_class(request):
+    print('>>>', request.POST['school_period_id'], '<<<')
     school_period = get_object_or_404(SchoolPeriod, pk=int(request.POST['school_period_id']))
     section = get_object_or_404(Section, pk=int(request.POST['section']))
 
@@ -768,7 +769,6 @@ def delete_template_class(request, template_section_period_id):
     messages.success(request, MSG_DELETE_CLASS)
     return JsonResponse({'is_success': True, 'messages': None})
 
-
 def add_from_template(request, section_period_type_id):
     section_period_type = get_object_or_404(SectionPeriodType, pk=int(section_period_type_id))
     section_period_date = section_period_type.date
@@ -777,40 +777,69 @@ def add_from_template(request, section_period_type_id):
 
     template_period_type = TemplatePeriodType.objects.filter(weekday=weekday, school=school).first()
     school_periods = SchoolPeriod.objects.filter(school_period_type=template_period_type.school_period_type)
+    are_classes_empty = True
 
     for school_period in school_periods:
         template_section_period = TemplateSectionPeriod.objects.filter(school_period=school_period).first()
-
-        lesson_plan = LessonPlan(
-            lesson=None,
-            hour_number=None,
-            greeting=None,
-            warmup=None,
-            presentation=None,
-            practice=None,
-            production=None,
-            cooldown=None,
-            assessment=None,
-            is_premade_lesson_plan=False,
-        )
-        lesson_plan.save()
+        next_lesson_plan = None
+        next_lesson_number = 1
+        next_hour_number = 1
 
         if template_section_period is not None:
+            are_classes_empty = False
+            is_default_lesson_plan = True
+            last_class_held = SectionPeriod.objects.filter(section=template_section_period.section).last()
+
+            if last_class_held:
+                lesson_number = last_class_held.lesson_number
+                hour_number = last_class_held.hour_number
+                next_lesson_number = lesson_number
+                course = None
+
+                if last_class_held.lesson_plan.lesson is not None:
+                    course = last_class_held.lesson_plan.lesson.course
+
+                if course is not None:
+                    next_hour_number = hour_number + 1
+                    print(last_class_held, next_hour_number)
+                    next_lesson_plan = LessonPlan.objects.filter(lesson__course=course, lesson__lesson_number=lesson_number, hour_number=next_hour_number, is_premade_lesson_plan=True).first()
+
+                    if next_lesson_plan is None:
+                        next_lesson_number = lesson_number + 1
+                        next_hour_number = 1
+                        next_lesson_plan = LessonPlan.objects.filter(lesson__course=course, lesson__lesson_number=next_lesson_number, hour_number=1, is_premade_lesson_plan=True).first()
+
+            if next_lesson_plan is None:
+                next_lesson_plan = LessonPlan(
+                    lesson=None,
+                    hour_number=1,
+                    greeting=None,
+                    warmup=None,
+                    presentation=None,
+                    practice=None,
+                    production=None,
+                    cooldown=None,
+                    assessment=None,
+                    is_premade_lesson_plan=False,
+                )
+
+            next_lesson_plan.is_premade_lesson_plan = False            
+            next_lesson_plan.pk = None
+            next_lesson_plan.save()
+
             new_section_period = SectionPeriod(
                 date=section_period_date,
                 section=template_section_period.section,
                 school_period=school_period,
-                lesson_plan=lesson_plan,
-                lesson_number=1,
-                hour_number=1,
+                lesson_plan=next_lesson_plan,
+                lesson_number=next_lesson_number,
+                hour_number=next_hour_number,
                 notes='',
             )
             new_section_period.save()
-        print(school_period, template_section_period)
 
-    # From the Section Period Type, check if it is a Monday.
-    # If it is not, only add classes from the template from the same day.
-    # Else, add it for the next five days.
-    # Note that when adding a new class for the entire week, we'll need to check for the last lesson, and then use the next lesson plan for it.
-    # The entire process may take more than 30 seconds for an entire week, so maaaaaybe we should just do it for one day first.
+    if are_classes_empty:
+        messages.error(request, "There are no classes in the template.")
+    else:
+        messages.success(request, "The classes have been added from the template.")
     return JsonResponse({'is_success': True, 'messages': None})

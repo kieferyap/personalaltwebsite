@@ -199,6 +199,7 @@ VIEW_SCHEDULE.showLastPeriod = function() {
 	});
 };
 
+
 $(document).ready(function(){
 	$(document)
 		.on('change', '#id_year_level', VIEW_SCHEDULE.populateDropdownValues)
