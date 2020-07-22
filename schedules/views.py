@@ -382,8 +382,11 @@ def edit_lesson_plans(request):
     sections = SectionPeriod.objects.filter(date=date)
     for section in sections:
         lesson_plan = get_object_or_404(LessonPlan, pk=int(lesson_plan_id))
+        lesson_plan.is_premade_lesson_plan = False
         lesson_plan.pk = None
         lesson_plan.save()
+        section.lesson_number = lesson_plan.lesson.lesson_number
+        section.hour_number = lesson_plan.hour_number
         section.lesson_plan = lesson_plan
         section.save()
 
