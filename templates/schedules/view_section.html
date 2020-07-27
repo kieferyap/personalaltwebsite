@@ -229,7 +229,7 @@
 		</div>
 		<div class="col-sm-3 page-subheader-right">
 			<a href="/schedules/view_section_activities/{{ section.id }}">
-				<button class="btn btn-tertiary btn-view-all">
+				<button class="btn btn-secondary btn-view-all">
 					{{ glyphicon_info_sign }} {% trans "View All" %}
 				</button>
 			</a>
@@ -315,6 +315,11 @@
 			</td>
 		</tr>
 		{% endfor %}
+		<tr>
+		<td colspan="8" class="vertical-center">
+		<a href="/schedules/view_section_activities/{{ section.id }}">{% trans "View All" %}</a>
+		</td>
+		</tr>
 		{% else %}
 		<tr>
 			<td colspan="8" class="vertical-center">
