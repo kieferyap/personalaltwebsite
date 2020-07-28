@@ -129,7 +129,10 @@
 				<td>
 					{% if schedule.information.handouts %}
 						{% for handout in schedule.information.handouts %}
-							<a href="/lessons/download_file/{{ handout.id }}">{{ handout.filename }}</a>{% if not forloop.last %}; {% endif %}
+							<a href="{% static '' %}media/{{file.activity_file}}">
+								{{ handout.filename }}
+							</a>
+							{% if not forloop.last %}; {% endif %}
 						{% endfor %}
 					{% else %}
 						<i>N/A</i>
