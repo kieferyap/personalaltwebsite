@@ -44,18 +44,18 @@ var sub_total = 0;
 var date_base_id = "#template_body_new_doc_date_";
 var price_base_id = "#template_body_new_doc_price_";
 var route_base_name_prefix = "select[name=route_";
-var methods_base_name_prefix = "select[name=methods_"
-var round_trip_base_name_prefix = "input[name=round-trip_"
-var destination_base_name_prefix = "input[name=destination_"
-var from_base_name_prefix = "input[name=from_"
-var to_base_name_prefix = "input[name=to_"
+var methods_base_name_prefix = "select[name=methods_";
+var round_trip_base_name_prefix = "input[name=round-trip_";
+var destination_base_name_prefix = "input[name=destination_";
+var from_base_name_prefix = "input[name=from_";
+var to_base_name_prefix = "input[name=to_";
 var name_suffix = "]";
+var option_contains = " option:contains(";
 
 for(var active_school_index=0; active_school_index &lt; all_routes.length; active_school_index+=1) {
 	for(var i=0; i &lt; all_routes[active_school_index].dates.length; i+=1, entry_id+=1) {
 		var date_selector = date_base_id+entry_id;
 		var price_selector = price_base_id+entry_id;
-		var route_selector = route_base_name_prefix+entry_id+name_suffix;
 		var destination_selector = destination_base_name_prefix+entry_id+name_suffix;
 		var methods_selector = methods_base_name_prefix+entry_id+name_suffix;
 		var from_selector = from_base_name_prefix+entry_id+name_suffix;
@@ -64,10 +64,12 @@ for(var active_school_index=0; active_school_index &lt; all_routes.length; activ
 
 		var cost_value = all_routes[active_school_index].fee;
 		var destination_value = all_routes[active_school_index].destination;
+
+		var route_selector = route_base_name_prefix+entry_id+name_suffix+option_contains+destination_value+")";
+
 		var method_value = all_routes[active_school_index].method;
 		var from_value = all_routes[active_school_index].from;
 		var to_value = all_routes[active_school_index].to;
-		var route_value = interac_mail+"_"+(active_school_index+1);
 		var is_round_trip_value = all_routes[active_school_index].isRoundTrip;
 		var date_value = year
 			+"-"+month
@@ -75,7 +77,7 @@ for(var active_school_index=0; active_school_index &lt; all_routes.length; activ
 
 		$(date_selector).val(date_value);
 		$(price_selector).val(cost_value);
-		$(route_selector).val(route_value);
+		$(route_selector).attr('selected', 'selected');
 		$(destination_selector).val(destination_value);
 		$(methods_selector).val(method_value);
 		$(from_selector).val(from_value);
